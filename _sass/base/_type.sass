@@ -1,0 +1,36 @@
+=font-size($size)
+  font-size: rem($size)
+  @if $size == $font-size-s
+    line-height: $line-height-s
+  @if $size == $font-size-m
+    line-height: $line-height-m
+  @if $size == $font-size-ml
+    line-height: $line-height-ml
+  @if $size == $font-size-l
+    line-height: $line-height-l
+  @if $size == $font-size-xl
+    line-height: $line-height-xl
+  @if $size == $font-size-xxl
+    line-height: $line-height-xxl
+  @if $size >= $font-size-l
+    +optimize-type
+
+=type-zoom($base-size, $breakpoints, $sizes)
+  +font-size($base-size)
+  $i: 0
+  @each $break in $breakpoints
+    $i: $i + 1
+    +bp-w(min, $break)
+      +font-size(nth($sizes, $i))
+
+.has-arrow:after
+  content: '\00a0›'
+
+=optimize-type
+  font-variant-ligatures: common-ligatures
+  font-feature-settings: "kern"
+  font-kerning: normal
+  text-rendering: optimizeLegibility
+
+  -webkit-font-feature-settings: "kern"
+  -webkit-font-variant-ligatures: common-ligatures

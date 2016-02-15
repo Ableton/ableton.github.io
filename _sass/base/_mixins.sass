@@ -1,0 +1,15 @@
+=bp-w($property, $breakpoint)
+  @if $property == min
+    @media screen and (min-width: em($breakpoint))
+      @content
+  @else if $property == max
+    @media screen and (max-width: em($breakpoint))
+      @content
+
+=bp-h($property, $breakpoint)
+  @if $property == min
+    @media screen and (min-height: em($breakpoint))
+      @content
+  @else if $property == max
+    @media screen and (max-height: em($breakpoint))
+      @content

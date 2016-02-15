@@ -1,0 +1,70 @@
+$bp-main-type-zoom: $bp-4
+
+.body-text
+  margin: 0 auto
+  h1
+    +type-zoom($font-size-xl, $bp-main-type-zoom, $font-size-xxl)
+    margin-top: -.2em
+    margin-bottom: .35em
+  h2
+    +type-zoom($font-size-l, $bp-main-type-zoom, $font-size-xl)
+    margin-top: 2em
+    margin-bottom: .5em
+  h3
+    +type-zoom($font-size-ml, $bp-main-type-zoom, $font-size-l)
+    margin-top: 1.5em
+    margin-bottom: .25em
+  h4, p, ul, ol
+    +type-zoom($font-size-m, $bp-main-type-zoom, $font-size-ml)
+  h4
+    margin-top: 2em
+  p
+    margin-bottom: 1.25em
+    &:last-child
+      margin-bottom: 0
+  ul, ol
+    margin: 1.25em auto
+    ul, ol
+      margin-top: 0
+      margin-bottom: 0
+  ol
+    list-style-type: decimal
+    li
+      margin-bottom: .25em
+      margin-left: 1.3em
+      &:last-child
+        margin-bottom: 0
+  ul
+    li
+      position: relative
+      margin-bottom: .25em
+      padding-left: .7em
+      &:before
+        display: block
+        position: absolute
+        top: .63em
+        left: 0
+        width: 3px
+        height: 3px
+        border-radius: 50%
+        background-color: currentcolor
+        content: ''
+      &:last-child
+        margin-bottom: 0
+  a
+    color: $blue
+  code
+    font-family: monospace
+    font-size: 80%
+    &.is-block
+      display: block
+      padding: 1.75em 2em
+      background-color: $dolphin
+      overflow-x: auto
+      white-space: pre
+      span
+        color: $indigo
+  hr
+    margin: rem($gutter * 2) 0 rem($gutter * 2)
+    border: 0
+    border-top: 2px solid $dolphin

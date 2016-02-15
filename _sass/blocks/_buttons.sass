@@ -1,0 +1,19 @@
+.button
+  +type-zoom($font-size-m, $bp-main-type-zoom, $font-size-ml)
+  display: inline-block
+  margin: 0
+  padding: .35em 1.5em
+  font-family: $font-family
+  font-weight: $medium
+  color: $white !important
+  background: $blue
+  border: 0
+  cursor: pointer
+  &::-moz-focus-inner
+    padding: 0
+    border: 0
+  &.is-disabled
+    background: $grey
+    pointer-events: none
+  &.has-top-margin
+    margin-top: .25em
