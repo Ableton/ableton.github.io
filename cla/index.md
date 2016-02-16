@@ -11,7 +11,7 @@ For us to be able to integrate non-trivial contributions into our repositories, 
 
 ## Ok, what’s next?
 
-1. Download a copy of our [CLA]({{ site.baseurl }}/downloads/Ableton_CLA_v1fillable.pdf).
+1. Download a copy of our [CLA](downloads/Ableton_CLA_v1fillable.pdf).
 2. Print the CLA, fill in the details, and sign it.
 3. Send the CLA to Ableton by scanning and [emailing the document](mailto:cla@ableton.com).
 
