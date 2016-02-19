@@ -52,7 +52,7 @@ A final note on phase synchronization: notice that it is more fundamental than b
 
 ## Integration Guide
 
-The LinkKit SDK is distributed as a zip file attached to a release in the LinkKit repo. Please see the [releases tab](https://github.com/Ableton/LinkKit/releases) for the latest release. Apps **must** be built against an official release for final submission to the App Store. Official releases are those not marked "Pre-release."
+The LinkKit SDK is distributed as a zip file attached to a release in the private LinkKit [repo](https://github.com/Ableton/LinkKit). To request access to the repo, please send an email to [link-devs@ableton.com](mailto:link-devs@ableton.com). If you already have access, you can find the latest release on the [releases tab](https://github.com/Ableton/LinkKit/releases). Apps **must** be built against an official release for final submission to the App Store. Official releases are those not marked "Pre-release."
 
 ### Getting Started
 
