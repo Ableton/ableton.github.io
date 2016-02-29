@@ -204,6 +204,11 @@ Below are a set of user interactions that are expected to work consistently acro
 - Change Tempo in LinkHut to **999bpm** **&rArr;** App and LinkHut should stay in sync.
 - If App does not support the full range of tempos supported by Link, it should stay in sync by switching to a multiple of the Link session tempo.
 
+
+#### TEMPO-5: Enabling Link does not change app's tempo if there is no Link session to join.
+- Open App, start playing
+- Set Link to **Enabled** **&rArr;** App's tempo should not change.
+
 ### Audio Engine
 
 These cases verify the correct implementation of latency compensation within an app's audio engine.
