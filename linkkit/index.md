@@ -16,7 +16,7 @@ We strongly recommend reading all of the content below, but please pay special a
 
 ### License
 
-Usage of LinkKit is governed by the [Ableton Link SDK license](downloads/Ableton_Link_SDK_License_v1.0.pdf).
+Usage of LinkKit is governed by the [Ableton Link SDK license (PDF)](downloads/Ableton_Link_SDK_License_v1.0.pdf).
 
 ## Conceptual Overview
 
@@ -68,9 +68,9 @@ In order to build and link against `libABLLink.a`, make sure that the location o
 
 ### User Interface Guidelines
 
-LinkKit includes a Link preference pane that must be added to an app's user interface. The appearance and behavior of the preference pane itself is not configurable, but you must make the choice of where and how to expose access to the preference pane within the app. In order to provide a consistent user experience across all Link-enabled apps, we have developed [UI integration guidelines](downloads/Ableton Link UI Guidelines.pdf) that provide guidance on this matter. Please follow them carefully.
+LinkKit includes a Link preference pane that must be added to an app's user interface. The appearance and behavior of the preference pane itself is not configurable, but you must make the choice of where and how to expose access to the preference pane within the app. In order to provide a consistent user experience across all Link-enabled apps, we have developed [UI integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf) that provide guidance on this matter. Please follow them carefully.
 
-Also included in this repo are [assets](https://github.com/Ableton/LinkKit/tree/master/assets) to be used if you choose to put a Link button in your app. All assets relating to the Ableton Link identity will be provided by Ableton and all buttons, copy, and labels should follow the [UI integration guidelines](downloads/Ableton Link UI Guidelines.pdf).
+Also included in this repo are [assets](https://github.com/Ableton/LinkKit/tree/master/assets) to be used if you choose to put a Link button in your app. All assets relating to the Ableton Link identity will be provided by Ableton and all buttons, copy, and labels should follow the [UI integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf).
 
 ### Link API Concepts
 
@@ -279,4 +279,4 @@ These cases test the correct implementation of the [app life cycle guidelines](#
 
 ## Promoting Link Integration
 
-After investing the time and effort to add Link to your app, you will probably want to tell the world about it. When you do so, please be sure to follow our [Ableton Link promotion guidelines](downloads/Ableton Link Promotion.pdf). The Link badge referred to in the guidelines can be found in the [assets](https://github.com/Ableton/LinkKit/tree/master/assets) folder. You can also find additional info and images in our [press kits](https://ableton.com/press) and use them as you please.
+After investing the time and effort to add Link to your app, you will probably want to tell the world about it. When you do so, please be sure to follow our [Ableton Link promotion guidelines (PDF)](downloads/Ableton Link Promotion.pdf). The Link badge referred to in the guidelines can be found in the [assets](https://github.com/Ableton/LinkKit/tree/master/assets) folder. You can also find additional info and images in our [press kits](https://ableton.com/press) and use them as you please.
