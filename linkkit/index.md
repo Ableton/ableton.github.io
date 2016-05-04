@@ -206,8 +206,11 @@ Below are a set of user interactions that are expected to work consistently acro
 
 
 #### TEMPO-5: Enabling Link does not change app's tempo if there is no Link session to join.
-- Open App, start playing
+- Open App, start playing.
+- Change App tempo to something other than the default.
 - Set Link to **Enabled** **&rArr;** App's tempo should not change.
+- Change App tempo to a new value (not the default).
+- Set Link to **Disabled** **&rArr;** App's tempo should not change.
 
 ### Audio Engine
 
