@@ -212,6 +212,15 @@ Below are a set of user interactions that are expected to work consistently acro
 - Change App tempo to a new value (not the default).
 - Set Link to **Disabled** **&rArr;** App's tempo should not change.
 
+### Beat Time
+
+These cases verify the continuity of beat time across Link operations.
+
+#### BEATTIME-1: Enabling Link does not change app's beat time if there is no Link session to join.
+- Open App, start playing.
+- Set Link to **Enabled** **&rArr;** No beat time jump or audible discontinuity should occur.
+- Set Link to **Disabled** **&rArr;** No beat time jump or audible discontinuity should occur.
+
 ### Audio Engine
 
 These cases verify the correct implementation of latency compensation within an app's audio engine.
