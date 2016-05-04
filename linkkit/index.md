@@ -221,6 +221,13 @@ These cases verify the continuity of beat time across Link operations.
 - Set Link to **Enabled** **&rArr;** No beat time jump or audible discontinuity should occur.
 - Set Link to **Disabled** **&rArr;** No beat time jump or audible discontinuity should occur.
 
+#### BEATTIME-2: App's beat time does not change if another participant joins its session.
+- Open App and set Link to **Enabled**.
+- Start playing.
+- Open LinkHut and set Link to **Enabled** **&rArr;** No beat time jump or audible discontinuity should occur in the App.
+
+**Note**: When joining an existing Link session, an app should adjust to the existing session's tempo and phase, which will usually result in a beat time jump. Apps that are already in a session should never have any kind of beat time or audio discontinuity when a new participant joins the session.
+
 ### Audio Engine
 
 These cases verify the correct implementation of latency compensation within an app's audio engine.
