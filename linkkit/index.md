@@ -273,7 +273,7 @@ These cases test the correct implementation of the [app life cycle guidelines](#
 - Bring App to the foreground again **&rArr;** there should be a notification “1 Link” and the Link settings should reflect this.
 - Disable and enable Link in App **&rArr;** there should be a notification “1 Link” and the Link settings should reflect this.
 
-**Note:** This is the expected behavior even if the App's background audio mode is enabled. Whenever the App goes to the background and it's known that the App will not be playing audio while in the background (not receiving MIDI, not connected to IAA or Audiobus), Link should be deactivated.
+**Note:** This is the expected behavior even if the App's background audio mode is enabled. Whenever the App goes to the background and it's known that the App will not be playing audio or processing MIDI while in the background (not receiving MIDI, not connected to IAA or Audiobus), Link should be deactivated.
 
 #### BACKGROUND-3: Link remains active when going to background while part of an IAA or Audiobus session (if supported).
 
