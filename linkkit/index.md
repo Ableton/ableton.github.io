@@ -161,7 +161,7 @@ Please see the LinkHut [AppDelegate.m](https://github.com/Ableton/LinkKit/blob/m
 
 ### Audiobus
 
-We have worked closely with the developers of Audiobus to provide some additional features when using Link-enabled apps within Audiobus. In order to take advantage of these additional features, please be sure to build against the latest available version of the Audiobus SDK when adding Link to your app. No code changes are required on your part to enable the Audiobus-Link integration.
+We have worked closely with the developers of Audiobus to provide some additional features when using Link-enabled apps within Audiobus. In order to take advantage of these additional features, please be sure to build against the latest available version of the Audiobus SDK when adding Link to your app. No code changes are required on your part to enable the Audiobus-Link integration, but please be sure to check the "Link-enabled" box in your Audiobus profile so that your app will be listed correctly in the Audibous app directory.
 
 ### Other Sync Technologies
 We recommend making Link mutually exclusive with other sync technologies that may be supported by your app, such as MIDI Clock or WIST. Having two concurrent clock sources fighting each other will degrade the Link session and compromise the user experience. The `ABLLinkSetIsEnabledCallback` callback registration function can be used to observe when Link has been enabled by the user in order to disable UI elements and functionality of other sync technologies.
