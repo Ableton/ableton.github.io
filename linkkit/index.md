@@ -16,7 +16,7 @@ We strongly recommend reading all of the content below, but please pay special a
 
 ### License
 
-Usage of LinkKit is governed by the [Ableton Link SDK license (PDF)](downloads/Ableton_Link_SDK_License_v1.0.pdf).
+Usage of LinkKit is governed by the [Ableton Link SDK license (PDF)](downloads/Ableton_Link_SDK_License_v2.0.pdf).
 
 ## Conceptual Overview
 
