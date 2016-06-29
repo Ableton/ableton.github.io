@@ -1,10 +1,14 @@
----
-layout: default
-body_class: has-toc
----
-
-{% include linkkit/toc.html %}
-
-<div class="body-text">
-  {{ content }}
-</div>
+<!DOCTYPE html>
+<html>
+  {% include head.html %}
+  <body class="has-toc">
+    <div class="wrapper">
+      {% include header.html %}
+      {% include linkkit/toc.html %}
+      <div class="body-text">
+        {{ content }}
+      </div>
+      {% include footer.html %}
+    </div>
+  </body>
+</html>
