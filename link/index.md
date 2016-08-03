@@ -10,11 +10,11 @@ title: Link Documentation
 
 Ableton provides two options for developers interested in integrating Link into their musical applications:
 
-- [LinkKit](https://ableton.github.io/linkkit) SDK for iOS
+- [LinkKit](/linkkit) SDK for iOS
 
 - [Link](https://github.com/Ableton/link) cross-platform source code library
 
-This page contains a discussion of fundamental Link concepts that apply to both of these offerings. For more detailed documentation and licensing information, please visit the appropriate project page linked above.
+This page contains a discussion of fundamental Link concepts that apply to both of these projects. For more detailed documentation and licensing information, please visit the appropriate project page linked above.
 
 ## Link Concepts
 
@@ -42,6 +42,20 @@ Beat alignment is a necessary condition for playing "in time" in most circumstan
 
 In order to enable the desired bar and loop alignment, an application provides a quantum value to Link that specifies, in beats, the desired unit of phase synchronization. Link guarantees that session participants with the same quantum value will be phase aligned, meaning that if two participants have a 4 beat quantum, beat 3 on one participant's timeline could correspond to beat 11 on another's, but not beat 12. It also guarantees the expected relationship between sessions in which one participant has a multiple of another's quantum. So if one app has an 8-beat loop with a quantum of 8 and another has a 4-beat loop with a quantum of 4, then the beginning of an 8-beat loop will always correspond to the beginning of a 4-beat loop, whereas a 4-beat loop may align with the beginning or the middle of an 8-beat loop.
 
-Specifying the quantum value and the handling of phase synchronization is the aspect of Link integration that leads to the greatest diversity of approaches among developers. There's no one-size-fits-all recommendation about how to do this, it is very application-specific. Some applicaitons have a constant quantum that never changes. Others allow it to change to match a changing value in their app, such as loop length or time signature. In Ableton Live, it is directly tied to the "Global Quantization" control, so it may be useful to explore how different values affect the behavior of Live in order to gain intuition about the quantum.
+Specifying the quantum value and the handling of phase synchronization is the aspect of Link integration that leads to the greatest diversity of approaches among developers. There's no one-size-fits-all recommendation about how to do this, it is very application-specific. Some applications have a constant quantum that never changes. Others allow it to change to match a changing value in their app, such as loop length or time signature. In Ableton Live, it is directly tied to the "Global Quantization" control, so it may be useful to explore how different values affect the behavior of Live in order to gain intuition about the quantum.
 
 In order to maintain phase synchronization, the vast majority of Link-enabled applications (including Live) perform a quantized launch when the user starts transport. This means that the user sees some sort of count-in animation or flashing play button until starting at the next quantum boundary. This is a very satisfying interaction because it allows multiple users on different devices to start exactly together just by pressing play at roughly the same time. We strongly recommend that developers implement quantized launching in Link-enabled applications.
+
+## Link API
+
+The [Link](https://github.com/Ableton/link) repo contains C++ source code implementing the Link protocol and a C++ API for integrating applications. Developers making iOS apps should instead use the [LinkKit](https://ableton.github.io/linkkit) SDK for iOS, which provides a pre-built library and a C/Objective-C API. The API provided by LinkKit is an almost direct mapping of Link's C++ API into C. So while the APIs are distinct, they share common concepts that we will explore in this section.
+
+### Timeline
+
+In Link, a timeline is represented as a triple of `(beat, time, tempo)`, which defines a bijection between the sets of all beat and time values. Converting between beats and time is the most basic service that Link provides to integrating applications - an application will generally want to know what beat value corresponds to a given moment in time. The timeline implements this and all other timing-related queries and modifications available to Link clients.
+
+Of course, tempo and beat/time mapping may change over time. A timeline value only represents a snapshot of the state of the system at a particular moment. Link provides clients the ability to 'capture' such a snapshot. This is the only mechanism for obtaining a timeline value. 
+
+Once a timeline value is captured, clients may query its properties or modify it by changing its tempo or its beat/time mapping. Modifications to the captured timeline are *not* propagated to the Link session automatically - clients must 'commit' the modified timeline back to Link for it to take effect. 
+
+A major benefit of the capture-commit model for timelines is that a captured timeline can be known to have a consistent value for the duration of a computation in which it is used. If clients queried timing information from the Link object directly without capturing a timeline, the results could be inconsistent during the course of a computation because of asynchronous changes coming from other participants in the Link session.
