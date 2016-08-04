@@ -19,21 +19,18 @@
     <li class="toc__list__item toc__list__item--primary {% if page.active_page == 'linkkit' %}is-active{% endif %}"><a href="{{ site.baseurl }}/linkkit/">Documentation</a></li>
     <li class="toc__list__item">
       <ul class="toc__list">
-        <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#conceptual-overview">Conceptual Overview</a></li>
-        <li class="toc__list__item">
-          <ul class="toc__list">
-            <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#tempo-synchronization">Tempo Synchronization</a></li>
-            <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#beat-alignment">Beat Alignment</a></li>
-            <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#phase-synchronization">Phase Synchronization</a></li>
-          </ul>
-        </li>
         <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#integration-guide">Integration Guide</a></li>
         <li class="toc__list__item">
           <ul class="toc__list">
             <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#getting-started">Getting Started</a></li>
             <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#user-interface-guidelines">User Interface Guidelines</a></li>
-            <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#link-api-concepts">Link API Concepts</a></li>
-            <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#link-api-usage">Link API Usage</a></li>
+            <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#host-time">Host Time</a></li>
+            <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#link-api-usage">Link API Usage</a>
+              <ul class="toc__list">
+                <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#initialization-and-destruction">Initialization and Destruction</a></li>
+                <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#active-enabled-and-connected">Active, Enabled, and Connected</a></li>
+              </ul>
+            </li>
             <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#app-life-cycle">App Life Cycle</a></li>
             <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#audiobus">Audiobus</a></li>
             <li class="toc__list__item"><a href="{{ site.baseurl }}/linkkit/#other-sync-technologies">Other Sync Technologies</a></li>
