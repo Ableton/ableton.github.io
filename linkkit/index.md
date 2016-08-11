@@ -6,169 +6,232 @@ title: LinkKit Documentation
 
 # LinkKit
 
-iOS SDK for [Ableton Link](https://ableton.com/link), a new technology that synchronizes musical beat, tempo, and phase across multiple applications running on one or more devices. Applications on devices connected to a local network discover each other automatically and form a musical session in which each participant can perform independently: anyone can start or stop while still staying in time. Anyone can change the tempo, the others will follow. Anyone can join or leave without disrupting the session.
+iOS SDK for [Ableton Link](https://ableton.com/link), a new technology that synchronizes
+musical beat, tempo, and phase across multiple applications running on one or more
+devices. Applications on devices connected to a local network discover each other
+automatically and form a musical session in which each participant can perform
+independently: anyone can start or stop while still staying in time. Anyone can change
+the tempo, the others will follow. Anyone can join or leave without disrupting the
+session.
 
-This site contains documentation and reference material for the LinkKit SDK. The SDK itself is hosted in a private GitHub repository. Developers interested in incorporating Link into their iOS apps should request access to this repository here:
+This site contains documentation and reference material for the LinkKit SDK. The SDK
+itself is hosted in a private GitHub repository. Developers interested in incorporating
+Link into their iOS apps should request access to this repository here:
 
 <a class="button" href="mailto:link-devs@ableton.com">Request LinkKit</a>
 
-We strongly recommend reading all of the content below, but please pay special attention to the [user interface guidelines](#user-interface-guidelines) and the [test plan](#test-plan) in order to make sure that your app is consistent with others in the Link ecosystem.
+We strongly recommend reading all of the content below, but please pay special attention
+to the [user interface guidelines](#user-interface-guidelines) and the [test
+plan](#test-plan) in order to make sure that your app is consistent with others in the
+Link ecosystem. If you haven't read the conceptual overview on the [Link](/link) page,
+please start with that.
 
 ### License
 
-Usage of LinkKit is governed by the [Ableton Link SDK license (PDF)](downloads/Ableton_Link_SDK_License_v2.0.pdf).
-
-## Conceptual Overview
-
-Link is different from other approaches to synchronizing electronic instruments that you may be familiar with. It is not designed to orchestrate multiple instruments so that they play together in lock-step along a shared timeline. In fact, Link-enabled apps each have their own independent timelines. The Link library maintains a temporal relationship between these independent timelines that provides the experience of playing in time without the timelines being identical.
-
-Playing "in time" is an intentionally vague term that might have different meanings for different musical contexts and different apps. As an app maker, you must decide the most natural way to map your app's musical concepts onto Link's synchronization model. For this reason, it's important to gain an intuitive understanding of how Link synchronizes **tempo**, **beat**, and **phase**.
-
-### Tempo Synchronization
-
-Tempo is a well understood parameter that represents the velocity of a beat timeline with respect to real time, giving it a unit of beats/time. Tempo synchronization is achieved when the beat timelines of all participants in a session are advancing at the same rate.
-
-With Link, any participant can propose a change to the session tempo at any time. No single participant is responsible for maintaining the shared session tempo. Rather, each participant chooses to adopt the last tempo value that they've seen proposed on the network. This means that it is possible for participants' tempi to diverge during periods of tempo modification (especially during simultaneous modification by multiple participants), but this state is only temporary. The session will converge quickly to a common tempo after any modification. The Link approach to tempo relies on group adaptation to changes made by independent, autonomous actors - much like a group of traditional instrumentalists playing together.
-
-### Beat Alignment
-
-It's conceivable that for certain musical situations, participants would wish to only synchronize tempo and not other musical parameters. But for the vast majority of cases, playing with synchronized tempo in the absence of beat alignment would not be perceived as playing "in time." In this scenario, participants' beat timelines would advance at the same rate, but the relationship between values on those beat timelines would be undefined (i.e. Beat 1 on one participant's timeline might correspond to beat 3.23 on another's).
-
-In most cases, we want to provide a stronger timing property for a session than just tempo synchronization - we also want beat alignment. When a session is in a state of beat alignment, an integral value on any participant's beat timeline corresponds to an integral value on all other participants' beat timelines. This property says nothing about the magnitude of beat values on each timeline, which can be different, just that any two timelines must only differ by an integral offset. For example, beat 1 on one participant's timeline might correspond to beat 3 or beat 4 on another's, but it cannot correspond to beat 3.5.
-
-Note that in order for a session to be in a state of beat alignment, it must have synchronized tempo. Tempo determines beat length and beat length equivalence among all timelines is a pre-requisite for beat alignment.
-
-### Phase Synchronization
-
-Beat alignment is a necessary condition for playing "in time" in most circumstances, but it's often not enough. When only beat alignment is provided, the user may still not have their timing expectations met if they are working with larger musical constructs, such as bars and loops, that span multiple beats. In this case, they may expect that the beat position within such a construct (the phase) be synchronized, resulting in alignment of bar and loop boundaries across participants.
-
-In order to enable the desired bar and loop alignment, app makers provide a quantum value to Link that specifies, in beats, the desired unit of phase synchronization. Link guarantees that session participants with the same quantum value will be phase aligned, meaning that if two participants have a 4 beat quantum, beat 3 on one participant's timeline could correspond to beat 11 on another's, but not beat 12. It also guarantees the expected relationship between sessions in which one participant has a multiple of another's quantum. So if one app has an 8-beat loop with a quantum of 8 and another has a 4-beat loop with a quantum of 4, then the beginning of an 8-beat loop will always correspond to the beginning of a 4-beat loop, whereas a 4-beat loop may align with the beginning or the middle of an 8-beat loop.
-
-Specifying the quantum value and the handling of phase synchronization is the aspect of Link integration that leads to the greatest diversity of approaches among app makers. There's no one-size-fits-all recommendation about how to do this, it is very app-specific. Some apps have a constant quantum that never changes. Others allow it to change to match a changing value in their app, such as loop length or time signature. In Ableton Live, it is directly tied to the "Global Quantization" control, so it may be useful to explore how different values affect the behavior of Live in order to gain intuition about the quantum.
-
-A decision that nearly all apps have to make is how phase synchronization affects the user action of starting to play. Live and the vast majority of apps perform a quantized launch, meaning that the user sees some sort of count-in animation or flashing play button until starting at the next quantum boundary. This is a very satisfying interaction because it allows multiple users on different devices to start exactly together just by pressing play at roughly the same time. However, there are other approaches imaginable, such as starting immediately while teleporting the playhead to the correct phase within the current loop or bar. The strategy that sticks close to the spirit of the app is probably the right one.
-
-A final note on phase synchronization: notice that it is more fundamental than beat alignment. There is in fact no special handling of beat alignment in Link. It is a property that emerges from synchronizing phase with a non-zero integral quantum value. This is worth noting because it is also possible to abandon beat alignment (perhaps to achieve polyrhythms) by specifying non-integral quantum values. A quantum value of 0 results in no phase synchronization at all and therefore no beat alignment. So it's easy to create the tempo-only synchronization scenario described previously in the [Beat Alignment](#beat-alignment) section if you can find a use for it.
+Usage of LinkKit is governed by the [Ableton Link SDK license
+(PDF)](downloads/Ableton_Link_SDK_License_v2.0.pdf).
 
 ## Integration Guide
 
-The LinkKit SDK is distributed as a zip file attached to a release in the private LinkKit [repo](https://github.com/Ableton/LinkKit). To request access to the repo, please send an email to [link-devs@ableton.com](mailto:link-devs@ableton.com). If you already have access, you can find the latest release on the [releases tab](https://github.com/Ableton/LinkKit/releases). Apps **must** be built against an official release for final submission to the App Store. Official releases are those not marked "Pre-release."
+The LinkKit SDK is distributed as a zip file attached to a release in the private LinkKit
+[repo](https://github.com/Ableton/LinkKit). To request access to the repo, please send an
+email to [link-devs@ableton.com](mailto:link-devs@ableton.com). If you already have
+access, you can find the latest release on the [releases
+tab](https://github.com/Ableton/LinkKit/releases). Apps **must** be built against an
+official release for final submission to the App Store. Official releases are those not
+marked "Pre-release."
 
 ### Getting Started
 
-Download the `LinkKit.zip` file attached to the latest release. A `LinkKit.zip` file has the following contents:
+Download the `LinkKit.zip` file attached to the latest release. A `LinkKit.zip` file has
+the following contents:
 
-- `libABLLink.a`: A static library containing the implementation of Link. This file is **not** in the repo - you must download a release to get it.
+- `libABLLink.a`: A static library containing the implementation of Link. This file is
+  **not** in the repo - you must download a release to get it.
 - [`ABLLink.h`](api-reference/#abllinkh): Pure C header containing the Link API.
-- [`ABLLinkSettingsViewController.h`](api-reference/#abllinksettingsviewcontrollerh): Objective-C header containing `UIViewController` subclass that is used to display the Link preference pane.
+- [`ABLLinkSettingsViewController.h`](api-reference/#abllinksettingsviewcontrollerh):
+  Objective-C header containing `UIViewController` subclass that is used to display the
+  Link preference pane.
 - [User interface assets](https://github.com/Ableton/LinkKit/tree/master/assets)
-- [LinkHut](https://github.com/Ableton/LinkKit/tree/master/examples/LinkHut): Very simple app to be used as example code and for testing integrations. It should build and run in-place without modification.
+- [LinkHut](https://github.com/Ableton/LinkKit/tree/master/examples/LinkHut): Very simple
+  app to be used as example code and for testing integrations. It should build and run
+  in-place without modification.
 
-In order to build and link against `libABLLink.a`, make sure that the location of the header files is added to the include path of your project and location of the library added to the linker path. `libABLLink.a` is implemented in C++, so you may also need to add `-lc++` to your link line if you're not already using C++ in your project. This is needed to pull in the C++ standard library.
+In order to build and link against `libABLLink.a`, make sure that the location of the
+header files is added to the include path of your project and location of the library
+added to the linker path. `libABLLink.a` is implemented in C++, so you may also need to
+add `-lc++` to your link line if you're not already using C++ in your project. This is
+needed to pull in the C++ standard library.
 
 ### User Interface Guidelines
 
-LinkKit includes a Link preference pane that must be added to an app's user interface. The appearance and behavior of the preference pane itself is not configurable, but you must make the choice of where and how to expose access to the preference pane within the app. In order to provide a consistent user experience across all Link-enabled apps, we have developed [UI integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf) that provide guidance on this matter. Please follow them carefully.
+LinkKit includes a Link preference pane that must be added to an app's user interface.
+The appearance and behavior of the preference pane itself is not configurable, but you
+must make the choice of where and how to expose access to the preference pane within the
+app. In order to provide a consistent user experience across all Link-enabled apps, we
+have developed [UI integration guidelines (PDF)](downloads/Ableton Link UI
+Guidelines.pdf) that provide guidance on this matter. Please follow them carefully.
 
-Also included in this repo are [assets](https://github.com/Ableton/LinkKit/tree/master/assets) to be used if you choose to put a Link button in your app. All assets relating to the Ableton Link identity will be provided by Ableton and all buttons, copy, and labels should follow the [UI integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf).
+Also included in this repo are
+[assets](https://github.com/Ableton/LinkKit/tree/master/assets) to be used if you choose
+to put a Link button in your app. All assets relating to the Ableton Link identity will
+be provided by Ableton and all buttons, copy, and labels should follow the [UI
+integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf).
 
-### Link API Concepts
+### Host Time
 
-The Link API is a low-level C API that is designed to integrate with an app's audio engine. It exposes a beat timeline whose magnitude and rate of progress is managed by the Link library to maintain the desired relationship to other participants on the network. In order to stay "in time" with other participants, and to provide low-latency adjustment to changes that come from the network, the app must query the progress of this timeline at each audio callback and adjust its playback within the corresponding buffer accordingly.
+Host time as used in the API always refers to the system host time and is the same
+coordinate system as values returned by
+[`mach_absolute_time`](https://developer.apple.com/library/mac/qa/qa1398/_index.html) and
+the `mHostTime` field of the `AudioTimeStamp` structure.
 
-For each audio buffer, the app asks the Link library where it should be on the beat timeline by the end of that buffer. The app then figures out how it can render its buffer so as to get to that beat time. This could mean speeding up or slowing down or doing a beat time jump to get to the right position. The library does not specify *how* the app should get there, it just reports where it should be at a given time.
+All host time values used in the Link API refer to host times at output. This is the
+important value for the library to know, since it must coordinate the timelines of
+multiple devices such that audio for the same beat time is hitting the output of those
+devices at the same moment. This is made more complicated by the fact that different
+devices (and even the same device in different configurations) can have different output
+latencies.
 
-#### Host and Beat Times
+In the audio callback, the system provides an `AudioTimeStamp` value for the audio
+buffer. The `mHostTime` field of this structure represents the host time at which the
+audio buffer will be passed to the hardware for output. Adding the output latency (see
+`AVAudioSession.outputLatency`) to this value will result in the correct host time at
+output for the *beginning* of that buffer. To get the host time at output for the end of
+the buffer, you would just add the buffer duration. For an example of this calculation,
+see the [LinkHut example
+project](https://github.com/Ableton/LinkKit/blob/master/examples/LinkHut/LinkHut/AudioEngi
+ne.m).
 
-The Link API deals with two time coordinate systems: host time and beat time. It maintains a bidirectional mapping between these coordinate systems that can be queried by clients for any time values.
-
-Host time as used in the API always refers to the system host time and is the same coordinate system as values returned by [`mach_absolute_time`](https://developer.apple.com/library/mac/qa/qa1398/_index.html) and the `mHostTime` field of the `AudioTimeStamp` structure.
-
-Beat time as used in the API refers to a coordinate system in which integral values represent beats. The library maintains a beat timeline, which starts at zero when the library is initialized and runs continuously at a rate defined by the shared session tempo. Clients may sample this beat timeline at a given host time via the `ABLLinkBeatTimeAtHostTime` function. Clients may reset this beat time to a chosen value via the `ABLLinkResetBeatTime` function, which is useful for aligning the values on the library's beat timeline to an app's transport timeline.
-
-#### Host Time at Output
-
-All host time values used in the Link API refer to host times at output. This is the important value for the library to know, since it must coordinate the timelines of multiple devices such that audio for the same beat time is hitting the output of those devices at the same moment. This is made more complicated by the fact that different devices (and even the same device in different configurations) can have different output latencies.
-
-In the audio callback, the system provides an `AudioTimeStamp` value for the audio buffer. The `mHostTime` field of this structure represents the host time at which the audio buffer will be passed to the hardware for output. Adding the output latency (see `AVAudioSession.outputLatency`) to this value will result in the correct host time at output for the *beginning* of that buffer. To get the host time at output for the end of the buffer, you would just add the buffer duration. For an example of this calculation, see the [LinkHut example project](https://github.com/Ableton/LinkKit/blob/master/examples/LinkHut/LinkHut/AudioEngine.m).
-
-Note that if your app adds additional software latency, you will need to add this as well in the calculation of the host time at output. Also note that the `AVAudioSession.outputLatency` property can change, so you should update your output latency in response to the [`AVAudioSessionRouteChangedNotification`](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioSession_ClassReference/#//apple_ref/c/data/AVAudioSessionRouteChangeNotification) in order to maintain the correct values in your latency calculations.
+Note that if your app adds additional software latency, you will need to add this as well
+in the calculation of the host time at output. Also note that the
+`AVAudioSession.outputLatency` property can change, so you should update your output
+latency in response to the
+[`AVAudioSessionRouteChangedNotification`](https://developer.apple.com/library/ios/documen
+tation/AVFoundation/Reference/AVAudioSession_ClassReference/#//apple_ref/c/data/AVAudioSes
+sionRouteChangeNotification) in order to maintain the correct values in your latency
+calculations.
 
 ### Link API Usage
 
-This section contains extended discussion on the contents of the C header [ABLLink.h](api-reference/#abllinkh) and the Objective-C header [ABLLinkSettingsViewController.h](api-reference/#abllinksettingsviewcontrollerh), which together make up the Link API.
+This section contains extended discussion on the contents of the C header
+[ABLLink.h](api-reference/#abllinkh) and the Objective-C header
+[ABLLinkSettingsViewController.h](api-reference/#abllinksettingsviewcontrollerh), which
+together make up the Link API.
 
 #### Initialization and Destruction
 
-An ABLLink library instance is created with the [`ABLLinkNew`](api-reference/#abllinknew) function. All other API functions take a library instance as an argument, so calling this is a pre-requisite to using the rest of the API. It is recommended that the library instance be created on the main thread during app initialization and that it be preserved for the lifetime of the app. There should not be a reason to create and destroy multiple instances of the library during an app's lifetime. To cleanup the instance on app shutdown, call [`ABLLinkDelete`](api-reference/#abllinkdelete).
+An ABLLink library instance is created with the [`ABLLinkNew`](api-reference/#abllinknew)
+function. Creating a library instance is a pre-requisite to using the rest of the API. It
+is recommended that the library instance be created on the main thread during app
+initialization and that it be preserved for the lifetime of the app. There should not be
+a reason to create and destroy multiple instances of the library during an app's
+lifetime. To cleanup the instance on app shutdown, call
+[`ABLLinkDelete`](api-reference/#abllinkdelete).
 
-An app must provide an initial tempo and quantum value when creating an instance of the library. The tempo is required because, as mentioned in the [*Host and Beat Times*](#host-and-beat-times) section, a library instance starts running a beat timeline from the moment it is initialized. The initial tempo provided to [`ABLLinkNew`](api-reference/#abllinknew) determines the rate of progression of this beat timeline until the app sets a new tempo or a new tempo comes in from the network. It is important that a valid tempo be provided to the library at initialization time, even if it's just a default value like 120bpm.
+An app must provide an initial tempo when creating an instance of the library. The tempo
+is required because a library instance is initialized with a new timeline that starts
+running from beat 0. The initial tempo provided to
+[`ABLLinkNew`](api-reference/#abllinknew) determines the rate of progression of this beat
+timeline until the app sets a new tempo or a new tempo comes in from the network. It is
+important that a valid tempo be provided to the library at initialization time, even if
+it's just a default value like 120bpm.
 
-The quantum parameter provides the initial value of the library instance's quantum property. It's necessary for the library to have an appropriate quantum at initialization time because this value is used to compute the timeline offset when joining a Link session (see the [Phase Synchronization](#phase-synchronization) section for more on this). For apps that use a constant quantum value, this is the only time the quantum must be specified. Apps that allow the quantum to vary would update it with the [`ABLLinkSetQuantum`](api-reference/#abllinksetquantum) function.
+#### Active, Enabled, and Connected Once an ABLLink instance is created, in order for it
+to start attempting to connect to other participants on the network, it must be both
+*active* and *enabled*. The active and enabled properties are two independent boolean
+conditions, the first of which is controlled by the app, and the second by the end user.
+So Link needs permission from both the app and the end user before it starts
+communicating on the network.
 
-#### Active, Enabled, and Connected
-Once an ABLLink instance is created, in order for it to start attempting to connect to other participants on the network, it must be both *active* and *enabled*. The active and enabled properties are two independent boolean conditions, the first of which is controlled by the app, and the second by the end user. So Link needs permission from both the app and the end user before it starts communicating on the network.
+The enabled state is controlled directly by the user via the
+[`ABLLinkSettingsViewController.h`](api-reference/#abllinksettingsviewcontrollerh). It
+persists across app runs, so if the user enables Link they don't have to re-enable it
+every time they re-launch the app. Since it is a persistent value that is visible and
+meaningful to the user, the API does not allow it to be modified programmatically by the
+app. However, the app can observe the enabled state via the
+[`ABLLinkIsEnabled`](api-reference/#abllinkisenabled) function and the
+[`ABLLinkSetIsEnabledCallback`](api-reference/#abllinksetisenabledcallback) callback
+registration function. These should only be needed to update UI elements that reflect the
+Link-enabled state. If you are depending on the enabled state in audio code, you're doing
+something wrong (you should probably be using
+[`ABLLinkIsConnected`](api-reference/#abllinkisconnected) instead. More on that soon...)
 
-The enabled state is controlled directly by the user via the [`ABLLinkSettingsViewController.h`](api-reference/#abllinksettingsviewcontrollerh). It persists across app runs, so if the user enables Link they don't have to re-enable it every time they re-launch the app. Since it is a persistent value that is visible and meaningful to the user, the API does not allow it to be modified programmatically by the app. However, the app can observe the enabled state via the [`ABLLinkIsEnabled`](api-reference/#abllinkisenabled) function and the [`ABLLinkSetIsEnabledCallback`](api-reference/#abllinksetisenabledcallback) callback registration function. These should only be needed to update UI elements that reflect the Link-enabled state. If you are depending on the enabled state in audio code, you're doing something wrong (you should probably be using [`ABLLinkIsConnected`](api-reference/#abllinkisconnected) instead. More on that soon...)
+The active state is controlled by the app via the
+[`ABLLinkSetActive`](api-reference/#abllinksetactive) function. This is primarily used to
+implement [background behavior](#background-behavior) - by calling
+`ABLLinkSetActive(false)` when going to the background, an app can make sure that the
+ABLLink instance is not communicating on the network when it's not needed or expected.
 
-The active state is controlled by the app via the [`ABLLinkSetActive`](api-reference/#abllinksetactive) function. This is primarily used to implement [background behavior](#background-behavior) - by calling `ABLLinkSetActive(false)` when going to the background, an app can make sure that the ABLLink instance is not communicating on the network when it's not needed or expected.
-
-When an ABLLink instance is both active and enabled, it will attempt to find other participants on the network in order to form a Link session. When at least one other participant has been found and a session has been formed, then the instance is considered connected. This state can be queried with the [`ABLLinkIsConnected`](api-reference/#abllinkisconnected) function.
-
-#### Controlling Tempo
-Since Link synchronizes tempo between participants in a session, apps must pass any tempo modifications made by the user to the ABLLink library via the [`ABLLinkProposeTempo`](api-reference/#abllinkproposetempo) function. Tempo proposals may not always be adopted by other participants in the session (for example if network communication fails temporarily or if a competing proposal is made by another participant), but they will always be adopted locally by the library.
-
-The [`ABLLinkProposeTempo`](api-reference/#abllinkproposetempo) function takes a `hostTimeAtOutput` parameter, which provides an exact timestamp for the tempo proposal (see the [Host Time at Output](#host-time-at-output) section for a discussion of this unit). This is needed for accuracy of timing so that all participants can consider the tempo change to have occurred at the exact same moment. Tempo proposal timestamps also serve to order proposals with respect to a common time reference so that all participants have a consistent understanding of which tempo proposal is most recent (and therefore the one to be used). It's important to understand that this function cannot accept arbitrary timestamp values - for example, it does not make sense to specify a tempo change that happened in the past. It is also not supported to specify tempo changes to happen arbitrarily far in the future. The timestamp must be roughly around now + latency or the tempo proposal will be ignored.
-
-[`ABLLinkProposeTempo`](api-reference/#abllinkproposetempo) is safe and recommended to call from the audio thread, as this will provide the most accurate timing. In common usage, this function would be called with a new tempo value at the beginning of the audio callback with the `hostTimeAtOutput` corresponding to the *beginning* of the current buffer. Subsequent calls to [`ABLLinkBeatTimeAtHostTime`](api-reference/#abllinkbeattimeathosttime) and [`ABLLinkHostTimeAtBeatTime`](api-reference/#abllinkhosttimeatbeattime) in the callback will give results based on this new tempo. You can see an example of this usage in the LinkHut [AudioEngine.m](https://github.com/Ableton/LinkKit/blob/master/examples/LinkHut/LinkHut/AudioEngine.m) file.
-
-Since any participant can propose a new tempo to the session, your app must be prepared to observe and adopt changes made to the session tempo by other participants. At the audio level, there is no work to do - the new session tempo will automatically be incorporated into the results of the [`ABLLinkBeatTimeAtHostTime`](api-reference/#abllinkbeattimeathosttime) and [`ABLLinkHostTimeAtBeatTime`](api-reference/#abllinkhosttimeatbeattime) functions. However, for the purpose of updating your app's tempo display, you can query the current session tempo with [`ABLLinkGetSessionTempo`](api-reference/#abllinkgetsessiontempo) and register for tempo change callbacks with [`ABLLinkSetSessionTempoCallback`](api-reference/#abllinksetsessiontempocallback). The session tempo values exposed by these functions are stable values that are appropriate for display to the user. It's important to understand that you should not try to derive the current tempo for each buffer and display that to the user. Individual buffer tempos will be much noisier than the reported session tempo as the ABLLink library is frequently making slight adjustments to keep everyone in sync.
-
-#### Quantized Launch
-
-When an app is connected to a Link session, there is a shared concept of phase between all participants with respect to any given quantum value. This is one of the fundamental features provided by Link. With shared phase comes a shared understanding of where the beginning of bars and loops fall, and therefore the ability for multiple participants to start together on these bar and loop boundaries.
-
-Quantized launch means that no matter the current phase value when a user presses play, the app will start playing at the desired phase, usually at the beginning of the next quantum. By utilizing a quantized launch strategy, apps can provide their users the ability to begin playing together, in phase, just by pressing play within the same bar or loop.
-
-There are two possible approaches to implementing quantized launch using the Link API. The first is slightly simpler and is most appropriate for loopers, step sequencers, and drum machines where the only thing that matters is the phase within a loop. This approach makes use of the [`ABLLinkPhase`](api-reference/#abllinkphase) function. The second is better if your app has a user-visible beat timeline with bars, similar to Ableton Live's arrangement view. This approach makes use of the [`ABLLinkResetBeatTime`](api-reference/#abllinkresetbeattime) function. It is a little bit harder to understand than the first, but it does a lot of work for you if your app needs that functionality.
-
-#### `ABLLinkPhase`
-
-If your app plays sound in a loop and it only cares about the phase within that loop and never about the magnitude of beats on a beat timeline, then this function is for you. It allows you to directly sample the phase of the shared session for a given beat time and quantum value. The result is a value in beats between zero and the given quantum. This function is designed to be called from the audio thread.
-
-Using [`ABLLinkPhase`](api-reference/#abllinkphase) to implement quantized launch is straightforward. After the user presses play, calculate the phase range of each subsequent buffer with [`ABLLinkPhase`](api-reference/#abllinkphase) and start playing when you've reached the desired phase (usually zero).
-
-#### `ABLLinkResetBeatTime`
-
-This function takes a desired starting beat time and a host time and returns a beat time before the desired starting beat time that corresponds to the given host time. The returned beat time is guaranteed to be within a quantum of the desired starting beat time. It's designed to be called from the audio thread.
-
-So how does this help with quantized launch? If you have an app that has a beat timeline that's exposed to the user (something like the arrangement timeline in Ableton Live), then a common use case would be for the user to move the start marker to a specific beat and then press play. When they press play, the app needs to delay the actual start until the phase matches that of the requested beat time. The length of this delay will depend on how out of phase the requested beat time is from the shared session phase when the user presses play.
-
-In this scenario, the app should pass the requested beat time from the user and the host time at which the user pressed play (generally the beginning of the next audio buffer after the action was detected) as the arguments to [`ABLLinkResetBeatTime.`](api-reference/#abllinkresetbeattime) This resets the library's beat timeline such that the requested beat time is phase aligned with the session. The returned value is then just the beat time that corresponds to the given host time, which is the same value that you would get by calling [`ABLLinkBeatTimeAtHostTime`](api-reference/#abllinkbeattimeathosttime) after the reset. To complete the quantized launch, the app then simply waits for the user-requested beat time to come and starts playing. By making this call, the app has synchronized the user-visible beat timeline and the library's beat timeline, meaning that beat values provided by the library can be treated directly as beat values in the app's timeline. In this way, the library can act as a simple sequencer for your app. Please see the usage of this function in the LinkHut example app's [AudioEngine.m](https://github.com/Ableton/LinkKit/blob/master/examples/LinkHut/LinkHut/AudioEngine.m) file.
-
-It's worth noting that this sequencing capability works regardless of whether Link is enabled or connected to other participants. If you call [`ABLLinkResetBeatTime`](api-reference/#abllinkresetbeattime) when the library is not connected, it will always return the same beat time that was passed to it. Therefore, if you modify your engine to use ABLLink as a sequencer in this way, you never have to check whether Link is connected or not in your audio code. The library will just do the right thing and only quantize when connected to a Link session.
+When an ABLLink instance is both active and enabled, it will attempt to find other
+participants on the network in order to form a Link session. When at least one other
+participant has been found and a session has been formed, then the instance is considered
+connected. This state can be queried with the
+[`ABLLinkIsConnected`](api-reference/#abllinkisconnected) function.
 
 ### App Life Cycle
 
-In order to provide the best user experience across the ecosystem of Link-enabled apps, it's important that apps take a consistent approach towards Link with regards to life cycle management. Furthermore, since the Link library does not have access to all of the necessary information to correctly respond to life cycle events, app developers must follow the life cycle guidelines below in order to meet user expectations. Please consider these carefully.
+In order to provide the best user experience across the ecosystem of Link-enabled apps,
+it's important that apps take a consistent approach towards Link with regards to life
+cycle management. Furthermore, since the Link library does not have access to all of the
+necessary information to correctly respond to life cycle events, app developers must
+follow the life cycle guidelines below in order to meet user expectations. Please
+consider these carefully.
 
-- When an app moves to the background and it is known that no audio will be generated by the app while in the background, Link should be deactivated by calling `ABLLinkSetActive(false)` - *even if background audio has been enabled for the app*. This helps prevent the confusing situation where a silent background app discovers and connects to other Link enabled apps and devices.
-- When an app is active, Link should be active. If an app deactivates Link using the [`ABLLinkSetActive`](api-reference/#abllinksetactive) function when going to the background, it must re-activate Link when becoming active again. For this reason, it is recommended that a call to `ABLLinkSetActive(true)` be included in the `applicationDidBecomeActive` method of the application delegate. Calling this function when Link is already active causes no harm, so this can be included unconditionally.
-- There are situations where an app may generate audio while in the background, such as when it's part of an Audiobus or IAA session or if it's listening to MIDI input. In these cases, Link should remain active when the app moves to the background.
-- It is possible for an app to be added to an Audiobus or IAA session while it is in the background. If Link was deactivated when moving to the background and the app is then added to an Audiobus or IAA session, Link should be re-activated in anticipation of playing audio as part of the session. Conversely, if an app in the background is ejected from an Audiobus or IAA session while not playing, and therefore no longer has the possibility to generate audio, it should deactivate Link. Handling these cases correctly will generally require listening to the [ABConnectionsChangedNotification](https://developer.audiob.us/doc/_a_b_audiobus_controller_8h.html#a336d7bc67873e51abf5b09f7fe15b9f4).
+- When an app moves to the background and it is known that no audio will be generated by
+  the app while in the background, Link should be deactivated by calling
+  `ABLLinkSetActive(false)` - *even if background audio has been enabled for the app*.
+  This helps prevent the confusing situation where a silent background app discovers and
+  connects to other Link enabled apps and devices.
+- When an app is active, Link should be active. If an app deactivates Link using the
+  [`ABLLinkSetActive`](api-reference/#abllinksetactive) function when going to the
+  background, it must re-activate Link when becoming active again. For this reason, it is
+  recommended that a call to `ABLLinkSetActive(true)` be included in the
+  `applicationDidBecomeActive` method of the application delegate. Calling this function
+  when Link is already active causes no harm, so this can be included unconditionally.
+- There are situations where an app may generate audio while in the background, such as
+  when it's part of an Audiobus or IAA session or if it's listening to MIDI input. In
+  these cases, Link should remain active when the app moves to the background.
+- It is possible for an app to be added to an Audiobus or IAA session while it is in the
+  background. If Link was deactivated when moving to the background and the app is then
+  added to an Audiobus or IAA session, Link should be re-activated in anticipation of
+  playing audio as part of the session. Conversely, if an app in the background is
+  ejected from an Audiobus or IAA session while not playing, and therefore no longer has
+  the possibility to generate audio, it should deactivate Link. Handling these cases
+  correctly will generally require listening to the
+  [ABConnectionsChangedNotification](https://developer.audiob.us/doc/_a_b_audiobus_control
+  ler_8h.html#a336d7bc67873e51abf5b09f7fe15b9f4).
 
-Please see the LinkHut [AppDelegate.m](https://github.com/Ableton/LinkKit/blob/master/examples/LinkHut/LinkHut/AppDelegate.m) file for a basic example of implementing the app life cycle guidelines, although it does not support Audiobus or IAA.
+Please see the LinkHut
+[AppDelegate.m](https://github.com/Ableton/LinkKit/blob/master/examples/LinkHut/LinkHut/Ap
+pDelegate.m) file for a basic example of implementing the app life cycle guidelines,
+although it does not support Audiobus or IAA.
 
 ### Audiobus
 
-We have worked closely with the developers of Audiobus to provide some additional features when using Link-enabled apps within Audiobus. In order to take advantage of these additional features, please be sure to build against the latest available version of the Audiobus SDK when adding Link to your app. No code changes are required on your part to enable the Audiobus-Link integration, but please be sure to check the "Link-enabled" box in your Audiobus profile so that your app will be listed correctly in the Audibous app directory.
+We have worked closely with the developers of Audiobus to provide some additional
+features when using Link-enabled apps within Audiobus. In order to take advantage of
+these additional features, please be sure to build against the latest available version
+of the Audiobus SDK when adding Link to your app. No code changes are required on your
+part to enable the Audiobus-Link integration, but please be sure to check the
+"Link-enabled" box in your Audiobus profile so that your app will be listed correctly in
+the Audibous app directory.
 
 ### Other Sync Technologies
-We recommend making Link mutually exclusive with other sync technologies that may be supported by your app, such as MIDI Clock or WIST. Having two concurrent clock sources fighting each other will degrade the Link session and compromise the user experience. The `ABLLinkSetIsEnabledCallback` callback registration function can be used to observe when Link has been enabled by the user in order to disable UI elements and functionality of other sync technologies.
+
+We recommend making Link mutually exclusive with other sync technologies that may be
+supported by your app, such as MIDI Clock or WIST. Having two concurrent clock sources
+fighting each other will degrade the Link session and compromise the user experience. The
+`ABLLinkSetIsEnabledCallback` callback registration function can be used to observe when
+Link has been enabled by the user in order to disable UI elements and functionality of
+other sync technologies.
 
 ## Test Plan
 
-Below are a set of user interactions that are expected to work consistently across all Link-enabled apps. In order to provide the best user experience, it's important that apps behave consistently with respect to these test cases. *Please verify that your app passes __all__ of the test cases before submitting to the App Store.* Apps that do not pass this test suite will not be considered conforming Link integrations.
+Below are a set of user interactions that are expected to work consistently across all
+Link-enabled apps. In order to provide the best user experience, it's important that apps
+behave consistently with respect to these test cases. *Please verify that your app passes
+__all__ of the test cases before submitting to the App Store.* Apps that do not pass this
+test suite will not be considered conforming Link integrations.
 
 ### Tempo Changes
 
@@ -176,7 +239,8 @@ Below are a set of user interactions that are expected to work consistently acro
 
 - Open LinkHut, press **Play**, and set Link to **Enabled**.
 - Open App and set Link to **Enabled**
-- Without starting to play, change tempo in App **&rArr;** LinkHut clicks should speed up or slow down to match the tempo specified in the App.
+- Without starting to play, change tempo in App **&rArr;** LinkHut clicks should speed up
+  or slow down to match the tempo specified in the App.
 - Start playing in the App **&rArr;** App and LinkHut should be in sync
 - Change tempo in App and in LinkHut **&rArr;** App and LinkHut should remain in sync
 
@@ -187,14 +251,16 @@ Below are a set of user interactions that are expected to work consistently acro
 - Terminate App.
 - Open LinkHut, press **Play** and set Link to **Enabled**.
 - Set LinkHut tempo to 130bpm.
-- Open App **&rArr;** Link should be connected (“1 Link”) and the App and LinkHut’s tempo should both be 130bpm.
+- Open App **&rArr;** Link should be connected (“1 Link”) and the App and LinkHut’s tempo
+  should both be 130bpm.
 
 #### TEMPO-3: When connected, loading a new document should not change the Link session tempo.
 
 - Open LinkHut, press **Play**, and set Link to **Enabled**.
 - Set LinkHut tempo to 130bpm.
 - Open App and set Link to **Enabled** **&rArr;** LinkHut’s tempo should not change.
-- Load new Song/Set/Session with a tempo other than 130bpm **&rArr;** App and LinkHut tempo should both be 130bpm.
+- Load new Song/Set/Session with a tempo other than 130bpm **&rArr;** App and LinkHut
+  tempo should both be 130bpm.
 
 #### TEMPO-4: Tempo range handling.
 
@@ -202,8 +268,8 @@ Below are a set of user interactions that are expected to work consistently acro
 - Open App, start Audio, and set Link to **Enabled**.
 - Change tempo in LinkHut to **20bpm** **&rArr;** App and LinkHut should stay in sync.
 - Change Tempo in LinkHut to **999bpm** **&rArr;** App and LinkHut should stay in sync.
-- If App does not support the full range of tempos supported by Link, it should stay in sync by switching to a multiple of the Link session tempo.
-
+- If App does not support the full range of tempos supported by Link, it should stay in
+  sync by switching to a multiple of the Link session tempo.
 
 #### TEMPO-5: Enabling Link does not change app's tempo if there is no Link session to join.
 - Open App, start playing.
@@ -218,44 +284,60 @@ These cases verify the continuity of beat time across Link operations.
 
 #### BEATTIME-1: Enabling Link does not change app's beat time if there is no Link session to join.
 - Open App, start playing.
-- Set Link to **Enabled** **&rArr;** No beat time jump or audible discontinuity should occur.
-- Set Link to **Disabled** **&rArr;** No beat time jump or audible discontinuity should occur.
+- Set Link to **Enabled** **&rArr;** No beat time jump or audible discontinuity should
+  occur.
+- Set Link to **Disabled** **&rArr;** No beat time jump or audible discontinuity should
+  occur.
 
 #### BEATTIME-2: App's beat time does not change if another participant joins its session.
 - Open App and set Link to **Enabled**.
 - Start playing.
-- Open LinkHut and set Link to **Enabled** **&rArr;** No beat time jump or audible discontinuity should occur in the App.
+- Open LinkHut and set Link to **Enabled** **&rArr;** No beat time jump or audible
+  discontinuity should occur in the App.
 
-**Note**: When joining an existing Link session, an app should adjust to the existing session's tempo and phase, which will usually result in a beat time jump. Apps that are already in a session should never have any kind of beat time or audio discontinuity when a new participant joins the session.
+**Note**: When joining an existing Link session, an app should adjust to the existing
+session's tempo and phase, which will usually result in a beat time jump. Apps that are
+already in a session should never have any kind of beat time or audio discontinuity when
+a new participant joins the session.
 
 ### Audio Engine
 
-These cases verify the correct implementation of latency compensation within an app's audio engine.
+These cases verify the correct implementation of latency compensation within an app's
+audio engine.
 
 #### AUDIOENGINE-1: Correct alignment of app audio with shared session
 
-  - Connect iOS Device to the audio input of a computer or alternatively use Inter-Device   Audio on OSX 10.11.
-  - Open LinkHut, press **Play**, and set Link to **Enabled**.
-  - Open App and set Link to **Enabled**.
-  - Start playing audio (preferably a short, click-like sample) with notes on the same beats as LinkHut.
-  - Record incoming audio on desktop within application of choice.
-  - Validate whether onset of the sample aligns with the pulse generated by LinkHut (tolerance: less than 3 ms).
+- Connect iOS Device to the audio input of a computer or alternatively use Inter-Device
+  Audio on OSX 10.11.
+- Open LinkHut, press **Play**, and set Link to **Enabled**.
+- Open App and set Link to **Enabled**.
+- Start playing audio (preferably a short, click-like sample) with notes on the same
+  beats as LinkHut.
+- Record incoming audio on desktop within application of choice.
+- Validate whether onset of the sample aligns with the pulse generated by LinkHut
+  (tolerance: less than 3 ms).
 
 #### AUDIOENGINE-2: Latency is updated when AVAudioSession route changes
 
-  - Make sure audio is played back through the internal speakers of the iOS device.
-  - Open LinkHut, press **Play**, and set Link to **Enabled**.
-  - Open App and set Link to **Enabled**.
-  - Start playing audio (preferably a short, click-like sample) with notes on the same beats as LinkHut.
-  - Connect iOS Device to the audio input of a computer or switch on Inter-Device Audio on OSX 10.11.
-  - Record incoming audio on desktop within application of choice.
-  - Validate whether onset of the sample aligns with the pulse generated by LinkHut (tolerance less than 3 ms).
+- Make sure audio is played back through the internal speakers of the iOS device.
+- Open LinkHut, press **Play**, and set Link to **Enabled**.
+- Open App and set Link to **Enabled**.
+- Start playing audio (preferably a short, click-like sample) with notes on the same
+  beats as LinkHut.
+- Connect iOS Device to the audio input of a computer or switch on Inter-Device Audio on
+  OSX 10.11.
+- Record incoming audio on desktop within application of choice.
+- Validate whether onset of the sample aligns with the pulse generated by LinkHut
+  (tolerance less than 3 ms).
 
-**Note**: When a cable is connected to the headphone-jack of an iOS device or Inter-Device Audio is turned on during operation, latency may change and must be accounted for. See [host time at output](#host-time-at-output).
+**Note**: When a cable is connected to the headphone-jack of an iOS device or
+Inter-Device Audio is turned on during operation, latency may change and must be
+accounted for. See [host time at output](#host-time-at-output).
 
 ### Background Behavior
 
-These cases test the correct implementation of the [app life cycle guidelines](#app-life-cycle).
+These cases test the correct implementation of the [app life cycle
+guidelines](#app-life-cycle).
 
 #### BACKGROUND-1: Link remains active when going to the background while playing audio.
 
@@ -270,32 +352,52 @@ These cases test the correct implementation of the [app life cycle guidelines](#
 - Open App and set Link to **Enabled**.
 - Stop App from playing audio and put it in the background
 - Open LinkHut, press **Settings** **&rArr;** there should be 0 connected apps.
-- Bring App to the foreground again **&rArr;** there should be a notification “1 Link” and the Link settings should reflect this.
-- Disable and enable Link in App **&rArr;** there should be a notification “1 Link” and the Link settings should reflect this.
+- Bring App to the foreground again **&rArr;** there should be a notification “1 Link”
+  and the Link settings should reflect this.
+- Disable and enable Link in App **&rArr;** there should be a notification “1 Link” and
+  the Link settings should reflect this.
 
-**Note:** This is the expected behavior even if the App's background audio mode is enabled. Whenever the App goes to the background and it's known that the App will not be playing audio or processing MIDI while in the background (not receiving MIDI, not connected to IAA or Audiobus), Link should be deactivated.
+**Note:** This is the expected behavior even if the App's background audio mode is
+enabled. Whenever the App goes to the background and it's known that the App will not be
+playing audio or processing MIDI while in the background (not receiving MIDI, not
+connected to IAA or Audiobus), Link should be deactivated.
 
 #### BACKGROUND-3: Link remains active when going to background while part of an IAA or Audiobus session (if supported).
 
 - Open LinkHut, press **Play**, and set Link to **Enabled**.
 - Open Audiobus and add the App as **Input**.
-- Switch to the App and set Link to **Enabled** **&rArr;** there should be a notification "1 Link" and the Link settings should reflect this.
-- Make sure the App is not playing and switch to LinkHut **&rArr;** No notification is presented. The Link settings should still indicate 1 connected App.
+- Switch to the App and set Link to **Enabled** **&rArr;** there should be a notification
+  "1 Link" and the Link settings should reflect this.
+- Make sure the App is not playing and switch to LinkHut **&rArr;** No notification is
+  presented. The Link settings should still indicate 1 connected App.
 
-**Note**: While connected to Audiobus/IAA Link must remain active even while not playing in the background because the App must be prepared to start playing at anytime.
+**Note**: While connected to Audiobus/IAA Link must remain active even while not playing
+in the background because the App must be prepared to start playing at anytime.
 
 #### BACKGROUND-4: Link is activated when App added to an Audiobus or IAA session while not playing in the background (if supported).
 
 - Open LinkHut, press **Play**, and set Link to **Enabled**.
-- Open App and set Link to **Enabled**.**&rArr;** The Link settings should indicate 1 connected App.
+- Open App and set Link to **Enabled**.**&rArr;** The Link settings should indicate 1
+  connected App.
 - Make sure the app is not playing and switch to Audiobus
-- Add the App as **Input** in Audiobus. Do this without tapping to wake it up. If the App is sleeping, switch back to it and then back to Audiobus and try again.
+- Add the App as **Input** in Audiobus. Do this without tapping to wake it up. If the App
+  is sleeping, switch back to it and then back to Audiobus and try again.
 - Switch back to LinkHut **&rArr;** The Link settings should indicate 1 connected App.
 - Switch back to Audiobus and eject the App from the Audiobus session
 - Switch back to LinkHut **&rArr;** The Link settings should indicate 0 connected Apps.
 
-**Note**: When an App in the background has deactivated Link, it must re-activate it if it becomes part of an Audiobus or IAA session, even if does not come to the foreground. Conversely, an App that is part of an Audiobus or IAA session session and is then disconnected from the session while in the background and not playing should deactivate Link.
+**Note**: When an App in the background has deactivated Link, it must re-activate it if
+it becomes part of an Audiobus or IAA session, even if does not come to the foreground.
+Conversely, an App that is part of an Audiobus or IAA session session and is then
+disconnected from the session while in the background and not playing should deactivate
+Link.
 
 ## Promoting Link Integration
 
-After investing the time and effort to add Link to your app, you will probably want to tell the world about it. When you do so, please be sure to follow our [Ableton Link promotion guidelines (PDF)](downloads/Ableton Link Promotion.pdf). The Link badge referred to in the guidelines can be found in the [assets](https://github.com/Ableton/LinkKit/tree/master/assets) folder. You can also find additional info and images in our [press kits](https://ableton.com/press) and use them as you please.
+After investing the time and effort to add Link to your app, you will probably want to
+tell the world about it. When you do so, please be sure to follow our [Ableton Link
+promotion guidelines (PDF)](downloads/Ableton Link Promotion.pdf). The Link badge
+referred to in the guidelines can be found in the
+[assets](https://github.com/Ableton/LinkKit/tree/master/assets) folder. You can also find
+additional info and images in our [press kits](https://ableton.com/press) and use them as
+you please.
