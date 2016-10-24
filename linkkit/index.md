@@ -69,8 +69,8 @@ LinkKit includes a Link preference pane that must be added to an app's user inte
 The appearance and behavior of the preference pane itself is not configurable, but you
 must make the choice of where and how to expose access to the preference pane within the
 app. In order to provide a consistent user experience across all Link-enabled apps, we
-have developed [UI integration guidelines (PDF)](downloads/Ableton Link UI
-Guidelines.pdf) that provide guidance on this matter. Please follow them carefully.
+have developed [UI integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf)
+that provide guidance on this matter. Please follow them carefully.
 
 Also included in this repo are
 [assets](https://github.com/Ableton/LinkKit/tree/master/assets) to be used if you choose
