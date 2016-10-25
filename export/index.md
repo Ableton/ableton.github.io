@@ -171,7 +171,7 @@ for the object instead.
 
 ## Live editions and restrictions
 
-There are four editions of Ableton Live: Intro, Lite, Standard, and Suite. The
+There are four editions of Ableton Live: Lite, Intro, Standard, and Suite. The
 [commercially available edition features can be found here][live-editions], and [the Live
 Lite (OEM) features can be found here][live-lite-features].
 
