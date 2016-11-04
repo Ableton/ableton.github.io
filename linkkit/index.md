@@ -18,7 +18,10 @@ This site contains documentation and reference material for the LinkKit SDK. The
 itself is hosted in a private GitHub repository. Developers interested in incorporating
 Link into their iOS apps should request access to this repository here:
 
-<a class="button" href="mailto:link-devs@ableton.com">Request LinkKit</a>
+<a
+ class="button"
+ href="https://www.ableton.com/en/link/sdk/license-request/">Request LinkKit
+</a>
 
 We strongly recommend reading all of the content below, but please pay special attention
 to the [user interface guidelines](#user-interface-guidelines) and the [test
