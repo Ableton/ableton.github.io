@@ -37,12 +37,11 @@ Usage of LinkKit is governed by the [Ableton Link SDK license
 ## Integration Guide
 
 The LinkKit SDK is distributed as a zip file attached to a release in the private LinkKit
-[repo](https://github.com/Ableton/LinkKit). To request access to the repo, please send an
-email to [link-devs@ableton.com](mailto:link-devs@ableton.com). If you already have
-access, you can find the latest release on the [releases
-tab](https://github.com/Ableton/LinkKit/releases). Apps **must** be built against an
-official release for final submission to the App Store. Official releases are those not
-marked "Pre-release."
+[repo](https://github.com/Ableton/LinkKit). You can find the latest release on the
+[releases tab](https://github.com/Ableton/LinkKit/releases). Apps **must** be built
+against an official release for final submission to the App Store. Official releases are
+those not marked "Pre-release."  
+In case of questions please contact [link-devs@ableton.com](mailto:link-devs@ableton.com).
 
 ### Getting Started
 
