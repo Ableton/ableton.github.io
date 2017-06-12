@@ -16,7 +16,11 @@ does *not* handle transmitting the project data from an iOS device to Live, or a
 network operations. Ableton will provide separate UX guidelines to advise on how the
 library can best be integrated in your app.
 
-<a class="button" href="mailto:link-devs@ableton.com">Request Ableton Live Set Export</a>
+<a
+ class="button"
+ href="https://www.ableton.com/en/link/sdk/license-request/">
+ Request Ableton Live Set Export
+</a>
 
 ## Concepts and Terminology
 

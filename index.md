@@ -27,5 +27,5 @@ please contact [link-devs@ableton.com](mailto:link-devs@ableton.com).
 [Ableton Live Set Export](/export) is a library that allows an application to write
 Ableton Live project files. Currently only ALSExportKit for iOS is available. It is
 governed by the [ALS Export SDK License](/export/assets/ALSExport_License_v1.0.pdf). To
-get access to ALSExportKit please contact
-[link-devs@ableton.com](mailto:link-devs@ableton.com).
+get access to ALSExportKit please register
+[here](https://www.ableton.com/en/link/sdk/license-request/).
