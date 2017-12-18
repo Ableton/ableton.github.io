@@ -6,12 +6,12 @@ title: Link Documentation
 
 # Ableton Link
 
-[Ableton Link](https://ableton.com/link) is a new technology that synchronizes musical
-beat, tempo, and phase across multiple applications running on one or more devices.
-Applications on devices connected to a local network discover each other automatically
-and form a musical session in which each participant can perform independently: anyone
-can start or stop while still staying in time. Anyone can change the tempo, the others
-will follow. Anyone can join or leave without disrupting the session.
+[Ableton Link](https://ableton.com/link) is a technology that synchronizes musical beat,
+tempo, phase, and start/stop commands across multiple applications running on one or more
+devices. Applications on devices connected to a local network discover each other
+automatically and form a musical session in which each participant can perform
+independently: anyone can start or stop while still staying in time. Anyone can change
+the tempo, the others will follow. Anyone can join or leave without disrupting the session.
 
 Ableton provides two options for developers interested in integrating Link into their
 musical applications:
@@ -38,6 +38,7 @@ different musical contexts and different applications. As a developer, you must 
 the most natural way to map your application's musical concepts onto Link's
 synchronization model. For this reason, it's important to gain an intuitive understanding
 of how Link synchronizes **tempo**, **beat**, and **phase**.
+Version 3 of Link makes it possible to share **start** and **stop** commands.
 
 ### Tempo Synchronization
 
@@ -110,6 +111,19 @@ because it allows multiple users on different devices to start exactly together 
 pressing play at roughly the same time. We strongly recommend that developers implement
 quantized launching in Link-enabled applications.
 
+### Start/Stop Synchronization
+
+As of Version 3, Link allows peers to share information on the user's intent to start or
+stop transport with other peers that have the feature enabled.
+Start/stop state changes only follow user actions. This means applications will not adapt
+to, or automatically change the start/stop state of a Link session when they are joining.
+After a peer joins a session it exposes and listens to all upcoming start/stop state
+changes. This is different to tempo, beat, and phase that are automatically aligned as
+soon as an application joins a session.
+As every application handles start and stop commands according to its capabilities and
+quantization, it is not expected that applications start or stop at the same time. Rather
+every application should start according to its quantum and phase.
+
 ## Link API
 
 The [Link](https://github.com/Ableton/link) repo contains C++ source code implementing
@@ -119,62 +133,68 @@ provides a pre-built library and a C/Objective-C API. The API provided by LinkKi
 almost direct mapping of Link's C++ API into C. So while the APIs are distinct, they
 share common concepts that we will explore in this section.
 
-### Timeline
+### Session State
 
-In Link, a timeline is represented as a triple of `(beat, time, tempo)`, which defines a
-bijection between the sets of all beat and time values. Converting between beats and time
-is the most basic service that Link provides to integrating applications - an application
-will generally want to know what beat value corresponds to a given moment in time. The
-timeline implements this and all other timing-related queries and modifications available
+In Link, a session state contains timeline information and a start/stop state.
+
+A timeline is represented as a triple of `(beat, time, tempo)`, which defines a bijection
+between the sets of all beat and time values. Converting between beats and time is the
+most basic service that Link provides to integrating applications - an application will
+generally want to know what beat value corresponds to a given moment in time. The timeline
+implements this and all other timing-related queries and modifications available
 to Link clients.
 
-Of course, tempo and beat/time mapping may change over time. A timeline value only
+A start/stop state represents the user's intent to start or stop transport at a
+given time.
+
+Timeline and start/stop state may change over time. A session state value only
 represents a snapshot of the state of the system at a particular moment. Link provides
 clients the ability to 'capture' such a snapshot. This is the only mechanism for
-obtaining a timeline value.
+obtaining a session state value.
 
-Once a timeline value is captured, clients may query its properties or modify it by
-changing its tempo or its beat/time mapping. Modifications to the captured timeline are
-*not* propagated to the Link session automatically - clients must 'commit' the modified
-timeline back to Link for it to take effect.
+Once a session state value is captured, clients may query its properties or modify it by
+changing its tempo, its beat/time mapping or its start/stop state. Modifications to the
+captured session state are *not* propagated to the Link session automatically - clients
+must 'commit' the modified session state back to Link for it to take effect.
 
-A major benefit of the capture-commit model for timelines is that a captured timeline can
-be known to have a consistent value for the duration of a computation in which it is
-used. If clients queried timing information from the Link object directly without
-capturing a timeline, the results could be inconsistent during the course of a
-computation because of asynchronous changes coming from other participants in the Link
-session.
+A major benefit of the capture-commit model for session states is that a captured
+session state can be known to have a consistent value for the duration of a computation
+in which it is used. If clients queried timing information from the Link object directly
+without capturing a session state, the results could be inconsistent during the course
+of a computation because of asynchronous changes coming from other participants in
+the Link session.
 
-### Timelines and Threads
+### Session States and Threads
 
-Audio application developers know that the thread that computes and fills audio buffers
+The audio thread, the thread that computes and fills audio buffers,
 has special timing constraints that must be managed carefully. It's usually necessary to
-query Link timing data while computing audio, so the Link API provides a realtime-safe
-timeline capture/commit function pair. This allows clients to query and modify the Link
-timeline directly from the audio callback. It's important that this audio-thread specific
-interface *only* be used from the audio thread.
+query Link state data while computing audio, so the Link API provides a realtime-safe
+session state capture/commit function pair. This allows clients to query and modify the
+Link session state directly from the audio callback. It's important that this audio-thread
+specific interface *only* be used from the audio thread.
 
-It is also often convenient to be able to access the current Link timeline from the main
-thread or other application threads, for example when rendering the current beat time in
-a GUI. For this reason, Link also provides a timeline capture/commit function pair to be
-used on application threads. These versions must not be used from the audio thread as
-they may block.
+It is also often convenient to be able to access the current Link session state from the
+main thread or other application threads, for example when rendering the current beat time
+in a GUI. For this reason, Link also provides a session state capture/commit function pair
+to be used on application threads. These versions must not be used from the audio thread
+as they may block.
 
-While it is possible to commit timeline modifications from an application thread, this
-should generally be avoided by clients that implement a custom audio callback and use
+While it is possible to commit session state modifications from an application thread,
+this should generally be avoided by clients that implement a custom audio callback and use
 Link from the audio thread. Because of the real-time constraints in the audio thread,
-changes made to the Link timeline from an application thread are processed asynchronously
-and are not immediately visible to the audio thread. The same is true for changes made
-from the audio thread - the new timeline will eventually be visible to the application
-thread, but clients cannot rely on exactly when. It's especially important to take this
-into account when combining Link timeline modifications with other cross-thread
-communication mechanisms employed by the application. For example, if a timeline is
-committed from an application thread and in the next line an atomic flag is set, the
-audio thread will almost certainly observe the flag being set before observing the new
-timeline value.
+changes made to the Link session state from an application thread are processed
+asynchronously and are not immediately visible to the audio thread. The same is true for
+changes made from the audio thread - the new session state will eventually be visible to
+the application thread, but clients cannot rely on exactly when. It's especially important
+to take this into account when combining Link session state modifications with other
+cross-thread communication mechanisms employed by the application. For example, if a
+session state is committed from an application thread and in the next line an atomic flag
+is set, the audio thread will almost certainly observe the flag being set before observing
+the new session state value.
 
 In order to avoid these complexities, it is recommended that applications that implement
-a custom audio callback only modify the Link timeline from the audio thread. Application
-threads may query the timeline but should not modify it. This approach also leads to
-better timing accuracy because timeline changes can be specified to occur at buffer
-boundaries or even at specific samples, which is not possible from an application thread.
+a custom audio callback only modify the Link session state from the audio thread.
+Application threads may query the session state but should not modify it. This approach
+also leads to better timing accuracy because session state changes can be specified to
+occur at buffer boundaries or even at specific samples, which is not possible from an
+application thread.

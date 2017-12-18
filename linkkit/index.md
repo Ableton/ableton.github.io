@@ -7,9 +7,9 @@ title: LinkKit Documentation
 # LinkKit
 
 iOS SDK for [Ableton Link](https://ableton.com/link), a new technology that synchronizes
-musical beat, tempo, and phase across multiple applications running on one or more
-devices. Applications on devices connected to a local network discover each other
-automatically and form a musical session in which each participant can perform
+musical beat, tempo, phase, and start/stop commands across multiple applications running on
+one or more devices. Applications on devices connected to a local network discover each
+other automatically and form a musical session in which each participant can perform
 independently: anyone can start or stop while still staying in time. Anyone can change
 the tempo, the others will follow. Anyone can join or leave without disrupting the
 session.
@@ -138,12 +138,12 @@ timeline until the app sets a new tempo or a new tempo comes in from the network
 important that a valid tempo be provided to the library at initialization time, even if
 it's just a default value like 120bpm.
 
-#### Active, Enabled, and Connected Once an ABLLink instance is created, in order for it
-to start attempting to connect to other participants on the network, it must be both
-*active* and *enabled*. The active and enabled properties are two independent boolean
-conditions, the first of which is controlled by the app, and the second by the end user.
-So Link needs permission from both the app and the end user before it starts
-communicating on the network.
+#### Active, Enabled, and Connected
+Once an ABLLink instance is created, in order for it to start attempting to connect to
+other participants on the network, it must be both *active* and *enabled*. The active and
+enabled properties are two independent boolean conditions, the first of which is
+controlled by the app, and the second by the end user. So Link needs permission from both
+the app and the end user before it starts communicating on the network.
 
 The enabled state is controlled directly by the user via the
 [`ABLLinkSettingsViewController.h`](api-reference/#abllinksettingsviewcontrollerh). It
@@ -169,6 +169,19 @@ participants on the network in order to form a Link session. When at least one o
 participant has been found and a session has been formed, then the instance is considered
 connected. This state can be queried with the
 [`ABLLinkIsConnected`](api-reference/#abllinkisconnected) function.
+
+Start Stop Sync is an opt in feature. To allow the user to enable Start Stop Sync with
+a toggle in the ABLLinkSettingsViewController a Boolean entry `YES` under the key
+`ABLLinkStartStopSyncSupported` must be added to `Info.plist`.
+The app can observe the state via the
+[`ABLLinkIsStartStopSyncEnabled`](api-reference/#abllinkisstartstopsyncenabled) function
+and the
+[`ABLLinkSetIsStartStopSyncEnabledCallback`](api-reference/#abllinksetisstartstopsyncenabledenabledcallback)
+callback registration function. These should only be needed to update UI elements that
+reflect the Start Stop Sync enabled state. The interface to the start/stop state behaves
+the same wether Start Stop Sync is enabled or not. The only difference is that changes are
+not kept in sync with other peers. This way the app does not have to change its behavior
+depending on the feature being enabled or disabled.
 
 ### App Life Cycle
 
@@ -301,6 +314,23 @@ These cases verify the continuity of beat time across Link operations.
 session's tempo and phase, which will usually result in a beat time jump. Apps that are
 already in a session should never have any kind of beat time or audio discontinuity when
 a new participant joins the session.
+
+### Start Stop States
+
+#### STARTSTOPSTATE-1: Listening to start/stop commands from other peers.
+- Open App, set Link and Start Stop Sync to **Enabled**.
+- Open LinkHut, set Link and Start Stop Sync to **Enabled** and press **Play** **&rArr;**
+App should start playing according to its quantization.
+- Stop playback in LinkHut **&rArr;** App should stop playing.
+
+#### STARTSTOPSTATE-2: Sending start/stop commands to other peers.
+- Open LinkHut, set Link and Start Stop Sync to **Enabled** and press **Play**.
+- Open App, set Link and Start Stop Sync to **Enabled** **&rArr;** App should not be
+playing while LinkHut continues playing.
+- Start playback in App **&rArr;** App should join playing according to its quantization.
+- Stop playback in App **&rArr;** App and LinkHut should stop playing.
+- Start playback in App **&rArr;** App and LinkHut should start playing according to
+their quantizations.
 
 ### Audio Engine
 

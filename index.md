@@ -11,8 +11,9 @@ the open source repositories on our [GitHub organization
 page](https://github.com/ableton). Two of our libraries have restricted access and may
 require licensing: Link and Live Set Export.
 
-[Ableton Link](/link) is a technology that synchronizes musical beat, tempo, and phase
-across multiple applications running on one or more devices. It comes in two flavours:
+[Ableton Link](/link) is a technology that synchronizes musical beat, tempo, phase,
+and start/stop commands across multiple applications running on one or more devices.
+It comes in two flavors:
 
 - [LinkKit SDK for iOS](/linkkit) LinkKit provides a C / Objective C interface for the use
 on iOS. Usage of LinkKit is governed by the [Ableton Link SDK
