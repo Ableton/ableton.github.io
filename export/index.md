@@ -165,11 +165,12 @@ objects which they represent.
 
 Each label may have an associated color as well. The label color feature should only be
 used if the generating app also makes use of colors to organize content. The label API
-exposes 16 common colors, and these colors remain the same regardless of which [skin]
-[live-manual-skins] has been selected by the user.
+has an enum with 10 common colors, and methods to find the nearest color given an RGB
+triplet. Label colors remain the same regardless of which [skin][live-manual-skins] has
+been selected by the user.
 
 If your application does not use colors for organizational purposes, then it is best not
-to set colors on the associated Live content. In this case, a random color will be chosen
+to set a color on the associated Live content. In this case, a random color will be chosen
 for the object instead.
 
 
