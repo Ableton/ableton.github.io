@@ -198,3 +198,14 @@ Application threads may query the session state but should not modify it. This a
 also leads to better timing accuracy because session state changes can be specified to
 occur at buffer boundaries or even at specific samples, which is not possible from an
 application thread.
+
+## Resources
+
+The following links may provide useful information if you are trying to integrate Link 
+with your own applications:
+
+- [Video presentation - "Ableton Link – A technology to synchronize music software"](https://media.ccc.de/v/lac2018-42-ableton_link_a_technology_to_synchronize_music_software)
+
+- [Paper - "Ableton Link – A technology to synchronize music software"](https://depositonce.tu-berlin.de/bitstream/11303/7886/4/LAC2018_proceedings.pdf#page=51)
+
+- [A list of Link enabled products](https://www.ableton.com/en/link/products/)
