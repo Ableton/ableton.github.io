@@ -138,9 +138,7 @@ common properties as well:
   If your application has a good idea about the nature of the audio content that it will
   synthesize, it might make sense to apply an appropriate warp mode to these clips. When
   in doubt, it is best to stick to the default warp mode, which will be set by Live based
-  on the user's preferences. Also note that the "Complex" and "Complex Pro" warp modes are
-  not supported by all editions of Live (see the "Live editions and restrictions" section
-  below).
+  on the user's preferences.
 
 
 ### MIDI clips
@@ -189,10 +187,6 @@ library, there are only a few key points to remember:
 * Live Lite allows a maximum of 8 tracks (either audio or MIDI)
 * Live Intro allows a maximum of 16 tracks (either audio or MIDI)
 * Live Lite & Intro both allow a maximum of 8 scenes
-* Live Lite & Intro do not support Complex or Complex Pro warp modes. Such clips will be
-  re-warped with the "Beats" warp mode, and the user will see a warning dialog when the
-  song is opened notifying them of this. Warp mode restrictions do not force Live to
-  switch to demo mode.
 
 In the case of the scene/track count restrictions, attempting to load a document which has
 more content than the edition of Live permits will force Live into demo mode. In demo
