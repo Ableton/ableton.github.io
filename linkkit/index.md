@@ -197,15 +197,16 @@ consider these carefully.
   `ABLLinkSetActive(false)` - *even if background audio has been enabled for the app*.
   This helps prevent the confusing situation where a silent background app discovers and
   connects to other Link enabled apps and devices.
+- There are situations where an app has to start playback while in the background, such as when
+  Start Stop Sync is enabled, if it is part of an Audiobus or IAA session or if is
+  listening to MIDI input. In these cases, Link should remain active when the app moves to
+  the background.
 - When an app is active, Link should be active. If an app deactivates Link using the
   [`ABLLinkSetActive`](api-reference/#abllinksetactive) function when going to the
   background, it must re-activate Link when becoming active again. For this reason, it is
   recommended that a call to `ABLLinkSetActive(true)` be included in the
   `applicationDidBecomeActive` method of the application delegate. Calling this function
   when Link is already active causes no harm, so this can be included unconditionally.
-- There are situations where an app may generate audio while in the background, such as
-  when it's part of an Audiobus or IAA session or if it's listening to MIDI input. In
-  these cases, Link should remain active when the app moves to the background.
 - It is possible for an app to be added to an Audiobus or IAA session while it is in the
   background. If Link was deactivated when moving to the background and the app is then
   added to an Audiobus or IAA session, Link should be re-activated in anticipation of
@@ -394,7 +395,20 @@ enabled. Whenever the App goes to the background and it's known that the App wil
 playing audio or processing MIDI while in the background (not receiving MIDI, not
 connected to IAA or Audiobus), Link should be deactivated.
 
-#### BACKGROUND-3: Link remains active when going to background while part of an IAA or Audiobus session (if supported).
+#### BACKGROUND-3: Link remains active when going to background while Start Stop Sync is enabled (if supported).
+
+- Open LinkHut and set Link to **Enabled** and set Sync Start/Stop to **Enabled**.
+- Switch to the App and set Link to **Enabled** and set Sync Start/Stop to **Enabled**
+  **&rArr;** there should be a notification "1 Link" and the Link settings should reflect this.
+- Make sure the App is not playing and switch to LinkHut **&rArr;** No notification is
+  presented. The Link settings should still indicate 1 connected App.
+- Start and stop playback in LinkHut **&rArr;** App should start and stop playback accordingly.
+
+**Note**: While Start Stop Sync is enabled Link must remain active even while not playing
+in the background because the App must be prepared to start playing at anytime.
+
+
+#### BACKGROUND-4: Link remains active when going to background while part of an IAA or Audiobus session (if supported).
 
 - Open LinkHut, press **Play**, and set Link to **Enabled**.
 - Open Audiobus and add the App as **Input**.
@@ -406,7 +420,7 @@ connected to IAA or Audiobus), Link should be deactivated.
 **Note**: While connected to Audiobus/IAA Link must remain active even while not playing
 in the background because the App must be prepared to start playing at anytime.
 
-#### BACKGROUND-4: Link is activated when App added to an Audiobus or IAA session while not playing in the background (if supported).
+#### BACKGROUND-5: Link is activated when App added to an Audiobus or IAA session while not playing in the background (if supported).
 
 - Open LinkHut, press **Play**, and set Link to **Enabled**.
 - Open App and set Link to **Enabled**.**&rArr;** The Link settings should indicate 1
