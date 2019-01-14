@@ -201,7 +201,18 @@ application thread.
 
 ## Resources
 
-The following links may provide useful information if you are trying to integrate Link 
+The following open source repositories integrate Link.
+*Those are not Ableton repositories. In case of issues please contact the respective maintainer. 
+If you are missing a repository in this list please open a pull request or mail to [link-devs@ableton.com](mailto:link-devs@ableton.com).*
+- [abl_link](https://github.com/libpd/abl_link)
+- [AndroidLinkAudio](https://github.com/jbloit/AndroidLinkAudio)
+- [carabiner](https://github.com/brunchboy/carabiner)
+- [JuceSampler](https://github.com/ianacaburian/AbletonLink_JuceSampler)
+- [link-python](https://github.com/gonzaloflirt/link-python)
+- [ofxAbletonLink](https://github.com/comoc/ofxAbletonLink)
+- [UnityAbletonLink](https://github.com/comoc/UnityAbletonLink)
+
+The following links may provide useful information if you are trying to integrate Link
 with your own applications:
 
 - [Video presentation - "Ableton Link – A technology to synchronize music software"](https://media.ccc.de/v/lac2018-42-ableton_link_a_technology_to_synchronize_music_software)
