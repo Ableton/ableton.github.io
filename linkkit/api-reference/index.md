@@ -390,10 +390,10 @@ on the new session state will be communicated to other peers in the session.
 
 #### `ABLLinkGetTempo`
 
-The tempo of the given timeline, in Beats Per Minute.
+The tempo of the given session state, in Beats Per Minute.
 
 <code class="is-block"><span>double</span> ABLLinkGetTempo(
-    ABLLinkTimelineRef);
+    ABLLinkSessionStateRef);
 </code>
 
 This is a stable value that is appropriate for display to the
@@ -402,11 +402,11 @@ because of clock drift compensation.
 
 #### `ABLLinkSetTempo`
 
-Set the timeline tempo to the given bpm value, taking effect at the
+Set the tempo to the given bpm value, taking effect at the
 given host time.
 
 <code class="is-block"><span>void</span> ABLLinkSetTempo(
-    ABLLinkTimelineRef,
+    ABLLinkSessionStateRef,
     <span>double</span> bpm,
     <span>uint64_t</span> hostTimeAtOutput);
 </code>
@@ -417,7 +417,7 @@ Get the beat value corresponding to the given host time for the given
 quantum.
 
 <code class="is-block"><span>double</span> ABLLinkBeatAtTime(
-    ABLLinkTimelineRef,
+    ABLLinkSessionStateRef,
     <span>uint64_t</span> hostTimeAtOutput,
     <span>double</span> quantum);
 </code>
@@ -428,7 +428,7 @@ Get the host time at which the sound corresponding to the given beat
 time and quantum reaches the device's audio output.
 
 <code class="is-block"><span>uint64_t</span> ABLLinkTimeAtBeat(
-    ABLLinkTimelineRef,
+    ABLLinkSessionStateRef,
     <span>double</span> beatTime,
     <span>double</span> quantum);
 </code>
@@ -442,7 +442,7 @@ Get the phase for a given beat time value on the shared beat grid with
 respect to the given quantum.
 
 <code class="is-block"><span>double</span> ABLLinkPhaseAtTime(
-    ABLLinkTimelineRef,
+    ABLLinkSessionStateRef,
     <span>uint64_t</span> hostTimeAtOutput,
     <span>double</span> quantum);
 </code>
@@ -456,7 +456,7 @@ Attempt to map the given beat time to the given host time in the
 context of the given quantum.
 
 <code class="is-block"><span>void</span> ABLLinkRequestBeatAtTime(
-    ABLLinkTimelineRef,
+    ABLLinkSessionStateRef,
     <span>double</span> beatTime,
     <span>uint64_t</span> hostTimeAtOutput,
     <span>double</span> quantum);
@@ -488,7 +488,7 @@ check the number of peers.
 Rudely re-map the beat/time relationship for all peers in a session.
 
 <code class="is-block"><span>void</span> ABLLinkForceBeatAtTime(
-    ABLLinkTimelineRef,
+    ABLLinkSessionStateRef,
     <span>double</span> beatTime,
     <span>uint64_t</span> hostTimeAtOutput,
     <span>double</span> quantum);
