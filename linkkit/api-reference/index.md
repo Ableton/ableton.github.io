@@ -402,8 +402,8 @@ because of clock drift compensation.
 
 #### `ABLLinkSetTempo`
 
-Set the tempo to the given bpm value, taking effect at the
-given host time.
+Set the tempo to the given bpm value at the given time. The change is applied 
+immediately and sent to the network after committing the session state.
 
 <code class="is-block"><span>void</span> ABLLinkSetTempo(
     ABLLinkSessionStateRef,
