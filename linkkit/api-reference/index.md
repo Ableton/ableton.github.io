@@ -448,7 +448,7 @@ respect to the given quantum.
 </code>
 
 This function allows access to the phase of a host time as described above with respect
-to a quantum. The returned value will be in the range `[0, quantum]`.
+to a quantum. The returned value will be in the range `[0, quantum)`.
 
 #### `ABLLinkRequestBeatAtTime`
 
