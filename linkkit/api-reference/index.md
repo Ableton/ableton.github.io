@@ -115,8 +115,7 @@ application thread.
 The tempo of the given session state, in Beats Per Minute.
 
 [`ABLLinkSetTempo`](#abllinksettempo)<br>
-Set the session state tempo to the given bpm value, taking effect at the
-given host time.
+Set the tempo to the given bpm value at the given time.
 
 [`ABLLinkBeatAtTime`](#abllinkbeatattime)<br>
 Get the beat value corresponding to the given host time for the given
@@ -402,14 +401,16 @@ because of clock drift compensation.
 
 #### `ABLLinkSetTempo`
 
-Set the tempo to the given bpm value at the given time. The change is applied 
-immediately and sent to the network after committing the session state.
+Set the tempo to the given bpm value at the given time.
 
 <code class="is-block"><span>void</span> ABLLinkSetTempo(
     ABLLinkSessionStateRef,
     <span>double</span> bpm,
     <span>uint64_t</span> hostTimeAtOutput);
 </code>
+
+The change is applied  immediately and sent to the network after committing the
+session state.
 
 #### `ABLLinkBeatAtTime`
 
