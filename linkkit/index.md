@@ -1,12 +1,12 @@
 ---
 layout: linkkit
 active_page: linkkit
-title: LinkKit Documentation
+title: LinkKit
 ---
 
 # LinkKit
 
-iOS SDK for [Ableton Link](https://ableton.com/link), a new technology that synchronizes
+iOS SDK for [Ableton Link](https://ableton.com/link), a technology that synchronizes
 musical beat, tempo, phase, and start/stop commands across multiple applications running on
 one or more devices. Applications on devices connected to a local network discover each
 other automatically and form a musical session in which each participant can perform
@@ -29,12 +29,12 @@ Usage of LinkKit is governed by the [Ableton Link SDK license
 
 ## Integration Guide
 
-The LinkKit SDK is distributed as a zip file attached to a release in the private LinkKit
+The LinkKit SDK is distributed as a zip file attached to a release in the LinkKit
 [repo](https://github.com/Ableton/LinkKit). You can find the latest release on the
-[releases tab](https://github.com/Ableton/LinkKit/releases). Apps **must** be built
+[releases tab](https://github.com/Ableton/LinkKit/releases). Apps **should** be built
 against an official release for final submission to the App Store. Official releases are
 those not marked "Pre-release."  
-In case of questions please contact [link-devs@ableton.com](mailto:link-devs@ableton.com).
+In case of questions please open a GitHub issue or contact [link-devs@ableton.com](mailto:link-devs@ableton.com).
 
 ### Getting Started
 
