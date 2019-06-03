@@ -14,14 +14,7 @@ independently: anyone can start or stop while still staying in time. Anyone can 
 the tempo, the others will follow. Anyone can join or leave without disrupting the
 session.
 
-This site contains documentation and reference material for the LinkKit SDK. The SDK
-itself is hosted in a private GitHub repository. Developers interested in incorporating
-Link into their iOS apps should request access to this repository here:
-
-<a
- class="button"
- href="https://www.ableton.com/en/link/sdk/license-request/">Request LinkKit
-</a>
+This site contains documentation and reference material for the [LinkKit SDK](https://github.com/Ableton/LinkKit).
 
 We strongly recommend reading all of the content below, but please pay special attention
 to the [user interface guidelines](#user-interface-guidelines) and the [test
