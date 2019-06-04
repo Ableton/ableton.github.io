@@ -24,8 +24,7 @@ please start with that.
 
 ### License
 
-Usage of LinkKit is governed by the [Ableton Link SDK license
-(PDF)](downloads/Ableton_Link_SDK_License_v2.0.pdf).
+Usage of LinkKit is governed by the [Ableton Link SDK license](https://github.com/Ableton/LinkKit/blob/master/LICENSE.md).
 
 ## Integration Guide
 
@@ -71,7 +70,7 @@ Also included in this repo are
 [assets](https://github.com/Ableton/LinkKit/tree/master/assets) to be used if you choose
 to put a Link button in your app. All assets relating to the Ableton Link identity will
 be provided by Ableton and all buttons, copy, and labels should follow the [UI
-integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf).
+integration guidelines (PDF)](https://github.com/Ableton/LinkKit/blob/master/docs/Ableton_Link_UI_Guidelines.pdf).
 
 ### Host Time
 
@@ -435,8 +434,8 @@ Link.
 
 After investing the time and effort to add Link to your app, you will probably want to
 tell the world about it. When you do so, please be sure to follow our [Ableton Link
-promotion guidelines (PDF)](downloads/Ableton Link Promotion.pdf). The Link badge
-referred to in the guidelines can be found in the
+promotion guidelines (PDF)](https://github.com/Ableton/LinkKit/blob/master/docs/Ableton_Link_Promotion.pdf).
+The Link badge referred to in the guidelines can be found in the
 [assets](https://github.com/Ableton/LinkKit/tree/master/assets) folder. You can also find
 additional info and images in our [press kits](https://ableton.com/press) and use them as
 you please.
