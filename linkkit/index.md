@@ -1,12 +1,12 @@
 ---
 layout: linkkit
 active_page: linkkit
-title: LinkKit Documentation
+title: LinkKit
 ---
 
 # LinkKit
 
-iOS SDK for [Ableton Link](https://ableton.com/link), a new technology that synchronizes
+iOS SDK for [Ableton Link](https://ableton.com/link), a technology that synchronizes
 musical beat, tempo, phase, and start/stop commands across multiple applications running on
 one or more devices. Applications on devices connected to a local network discover each
 other automatically and form a musical session in which each participant can perform
@@ -14,14 +14,7 @@ independently: anyone can start or stop while still staying in time. Anyone can 
 the tempo, the others will follow. Anyone can join or leave without disrupting the
 session.
 
-This site contains documentation and reference material for the LinkKit SDK. The SDK
-itself is hosted in a private GitHub repository. Developers interested in incorporating
-Link into their iOS apps should request access to this repository here:
-
-<a
- class="button"
- href="https://www.ableton.com/en/link/sdk/license-request/">Request LinkKit
-</a>
+This site contains documentation and reference material for the [LinkKit SDK](https://github.com/Ableton/LinkKit).
 
 We strongly recommend reading all of the content below, but please pay special attention
 to the [user interface guidelines](#user-interface-guidelines) and the [test
@@ -31,17 +24,16 @@ please start with that.
 
 ### License
 
-Usage of LinkKit is governed by the [Ableton Link SDK license
-(PDF)](downloads/Ableton_Link_SDK_License_v2.0.pdf).
+Usage of LinkKit is governed by the [Ableton Link SDK license](https://github.com/Ableton/LinkKit/blob/master/LICENSE.md).
 
 ## Integration Guide
 
-The LinkKit SDK is distributed as a zip file attached to a release in the private LinkKit
+The LinkKit SDK is distributed as a zip file attached to a release in the LinkKit
 [repo](https://github.com/Ableton/LinkKit). You can find the latest release on the
-[releases tab](https://github.com/Ableton/LinkKit/releases). Apps **must** be built
+[releases tab](https://github.com/Ableton/LinkKit/releases). Apps **should** be built
 against an official release for final submission to the App Store. Official releases are
 those not marked "Pre-release."  
-In case of questions please contact [link-devs@ableton.com](mailto:link-devs@ableton.com).
+In case of questions please open a GitHub issue or contact [link-devs@ableton.com](mailto:link-devs@ableton.com).
 
 ### Getting Started
 
@@ -78,7 +70,7 @@ Also included in this repo are
 [assets](https://github.com/Ableton/LinkKit/tree/master/assets) to be used if you choose
 to put a Link button in your app. All assets relating to the Ableton Link identity will
 be provided by Ableton and all buttons, copy, and labels should follow the [UI
-integration guidelines (PDF)](downloads/Ableton Link UI Guidelines.pdf).
+integration guidelines (PDF)](https://github.com/Ableton/LinkKit/blob/master/docs/Ableton_Link_UI_Guidelines.pdf).
 
 ### Host Time
 
@@ -442,8 +434,8 @@ Link.
 
 After investing the time and effort to add Link to your app, you will probably want to
 tell the world about it. When you do so, please be sure to follow our [Ableton Link
-promotion guidelines (PDF)](downloads/Ableton Link Promotion.pdf). The Link badge
-referred to in the guidelines can be found in the
+promotion guidelines (PDF)](https://github.com/Ableton/LinkKit/blob/master/docs/Ableton_Link_Promotion.pdf).
+The Link badge referred to in the guidelines can be found in the
 [assets](https://github.com/Ableton/LinkKit/tree/master/assets) folder. You can also find
 additional info and images in our [press kits](https://ableton.com/press) and use them as
 you please.

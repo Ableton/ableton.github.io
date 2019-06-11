@@ -17,7 +17,7 @@ It comes in two flavors:
 
 - [LinkKit SDK for iOS](/linkkit) LinkKit provides a C / Objective C interface for the use
 on iOS. Usage of LinkKit is governed by the [Ableton Link SDK
-license](/linkkit/downloads/Ableton_Link_SDK_License_v2.0.pdf). To request access to
+license](https://github.com/Ableton/LinkKit/blob/master/LICENSE.md). To request access to
 LinkKit please register [here](https://www.ableton.com/en/link/sdk/license-request/).
 
 - [Link cross-platform source code library](https://github.com/ableton/link) Link is an
