@@ -42,8 +42,9 @@ the following contents:
 
 - `libABLLink.a`: A static library containing the implementation of Link. This file is
   **not** in the repo - you must download a release to get it.
-- [`ABLLink.h`](api-reference/#abllinkh): Pure C header containing the Link API.
-- [`ABLLinkSettingsViewController.h`](api-reference/#abllinksettingsviewcontrollerh):
+- [`ABLLink.h`](https://github.com/Ableton/LinkKit/blob/master/LinkKit/ABLLink.h):
+  Pure C header containing the Link API.
+- [`ABLLinkSettingsViewController.h`](https://github.com/Ableton/LinkKit/blob/master/LinkKit/ABLLinkSettingsViewController.h):
   Objective-C header containing `UIViewController` subclass that is used to display the
   Link preference pane.
 - [User interface assets](https://github.com/Ableton/LinkKit/tree/master/assets)
@@ -108,27 +109,25 @@ calculations.
 ### Link API Usage
 
 This section contains extended discussion on the contents of the C header
-[ABLLink.h](api-reference/#abllinkh) and the Objective-C header
-[ABLLinkSettingsViewController.h](api-reference/#abllinksettingsviewcontrollerh), which
-together make up the Link API.
+[ABLLink.h](https://github.com/Ableton/LinkKit/blob/master/LinkKit/ABLLink.h) and the
+Objective-C header [ABLLinkSettingsViewController.h](https://github.com/Ableton/LinkKit/blob
+/master/LinkKit/ABLLinkSettingsViewController.h), which together make up the Link API.
 
 #### Initialization and Destruction
 
-An ABLLink library instance is created with the [`ABLLinkNew`](api-reference/#abllinknew)
-function. Creating a library instance is a pre-requisite to using the rest of the API. It
+An ABLLink library instance is created with the `ABLLinkNew` function. Creating a library
+instance is a pre-requisite to using the rest of the API. It
 is recommended that the library instance be created on the main thread during app
 initialization and that it be preserved for the lifetime of the app. There should not be
 a reason to create and destroy multiple instances of the library during an app's
-lifetime. To cleanup the instance on app shutdown, call
-[`ABLLinkDelete`](api-reference/#abllinkdelete).
+lifetime. To cleanup the instance on app shutdown, call `ABLLinkDelete`.
 
 An app must provide an initial tempo when creating an instance of the library. The tempo
 is required because a library instance is initialized with a new timeline that starts
-running from beat 0. The initial tempo provided to
-[`ABLLinkNew`](api-reference/#abllinknew) determines the rate of progression of this beat
-timeline until the app sets a new tempo or a new tempo comes in from the network. It is
-important that a valid tempo be provided to the library at initialization time, even if
-it's just a default value like 120bpm.
+running from beat 0. The initial tempo provided to `ABLLinkNew` determines the rate of
+progression of this beat timeline until the app sets a new tempo or a new tempo comes in
+from the network. It is important that a valid tempo be provided to the library at
+initialization time, even if it's just a default value like 120bpm.
 
 #### Active, Enabled, and Connected
 Once an ABLLink instance is created, in order for it to start attempting to connect to
@@ -138,20 +137,21 @@ controlled by the app, and the second by the end user. So Link needs permission 
 the app and the end user before it starts communicating on the network.
 
 The enabled state is controlled directly by the user via the
-[`ABLLinkSettingsViewController.h`](api-reference/#abllinksettingsviewcontrollerh). It
+[`ABLLinkSettingsViewController.h`](https://github.com/Ableton/LinkKit/blob/master/LinkKit
+/ABLLinkSettingsViewController.h). It
 persists across app runs, so if the user enables Link they don't have to re-enable it
 every time they re-launch the app. Since it is a persistent value that is visible and
 meaningful to the user, the API does not allow it to be modified programmatically by the
 app. However, the app can observe the enabled state via the
-[`ABLLinkIsEnabled`](api-reference/#abllinkisenabled) function and the
-[`ABLLinkSetIsEnabledCallback`](api-reference/#abllinksetisenabledcallback) callback
+`ABLLinkIsEnabled` function and the
+`ABLLinkSetIsEnabledCallback` callback
 registration function. These should only be needed to update UI elements that reflect the
 Link-enabled state. If you are depending on the enabled state in audio code, you're doing
 something wrong (you should probably be using
-[`ABLLinkIsConnected`](api-reference/#abllinkisconnected) instead. More on that soon...)
+`ABLLinkIsConnected` instead. More on that soon...)
 
 The active state is controlled by the app via the
-[`ABLLinkSetActive`](api-reference/#abllinksetactive) function. This is primarily used to
+`ABLLinkSetActive` function. This is primarily used to
 implement [background behavior](#background-behavior) - by calling
 `ABLLinkSetActive(false)` when going to the background, an app can make sure that the
 ABLLink instance is not communicating on the network when it's not needed or expected.
@@ -160,16 +160,16 @@ When an ABLLink instance is both active and enabled, it will attempt to find oth
 participants on the network in order to form a Link session. When at least one other
 participant has been found and a session has been formed, then the instance is considered
 connected. This state can be queried with the
-[`ABLLinkIsConnected`](api-reference/#abllinkisconnected) function.
+`ABLLinkIsConnected` function.
 
 Start Stop Sync is an opt in feature. To allow the user to enable Start Stop Sync with
 a toggle in the ABLLinkSettingsViewController a Boolean entry `YES` under the key
 `ABLLinkStartStopSyncSupported` must be added to `Info.plist`.
 The app can observe the state via the
-[`ABLLinkIsStartStopSyncEnabled`](api-reference/#abllinkisstartstopsyncenabled) function
+`ABLLinkIsStartStopSyncEnabled` function
 and the
-[`ABLLinkSetIsStartStopSyncEnabledCallback`](api-reference/#abllinksetisstartstopsyncenabledenabledcallback)
-callback registration function. These should only be needed to update UI elements that
+`ABLLinkSetIsStartStopSyncEnabledCallback` callback registration function. These should
+only be needed to update UI elements that
 reflect the Start Stop Sync enabled state. The interface to the start/stop state behaves
 the same wether Start Stop Sync is enabled or not. The only difference is that changes are
 not kept in sync with other peers. This way the app does not have to change its behavior
@@ -194,7 +194,7 @@ consider these carefully.
   listening to MIDI input. In these cases, Link should remain active when the app moves to
   the background.
 - When an app is active, Link should be active. If an app deactivates Link using the
-  [`ABLLinkSetActive`](api-reference/#abllinksetactive) function when going to the
+  `ABLLinkSetActive` function when going to the
   background, it must re-activate Link when becoming active again. For this reason, it is
   recommended that a call to `ABLLinkSetActive(true)` be included in the
   `applicationDidBecomeActive` method of the application delegate. Calling this function
