@@ -16,9 +16,8 @@ and start/stop commands across multiple applications running on one or more devi
 It comes in two flavors:
 
 - [LinkKit SDK for iOS](/linkkit) LinkKit provides a C / Objective C interface for the use
-on iOS. Usage of LinkKit is governed by the [Ableton Link SDK
-license](https://github.com/Ableton/LinkKit/blob/master/LICENSE.md). To request access to
-LinkKit please register [here](https://www.ableton.com/en/link/sdk/license-request/).
+on iOS. Usage of LinkKit is governed by the [Ableton Link SDK license](https://github.com/Ableton/LinkKit/blob/master/LICENSE.md). 
+By using LinkKit you agree to its terms and conditions.
 
 - [Link cross-platform source code library](https://github.com/ableton/link) Link is an
 open source cross platform C++ library. It is dual licensed under GPLv2+ and a proprietary
