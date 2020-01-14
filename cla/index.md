@@ -11,9 +11,7 @@ For us to be able to integrate non-trivial contributions into our repositories, 
 
 ## Ok, what’s next?
 
-1. Download a copy of our [CLA](downloads/Ableton_CLA_v1.1fillable.pdf).
-2. Print the CLA, fill in the details, and sign it.
-3. Send the CLA to Ableton by scanning and [emailing the document](mailto:cla@ableton.com).  Please let us know which project(s) you are interested in contributing to.
+We use [DocuSign](https://docusign.com) to allow signing the [CLA](downloads/Ableton_CLA_v1.1fillable.pdf) without printing and mailing a document. Please follow [this link](https://eu.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=50f575ec-fd10-44cc-8622-ba8fafe7436e&env=eu&acct=a4b1c37f-0eef-403a-81df-74f0d2021f47&v=2) to get to the signature process. After the document is signed, the maintainers of the Ableton open source repositories will be notified.
 
 ## FAQ
 
