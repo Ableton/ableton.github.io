@@ -222,3 +222,12 @@ with your own applications:
 - [Paper - "Ableton Link – A technology to synchronize music software"](https://depositonce.tu-berlin.de/bitstream/11303/7886/4/LAC2018_proceedings.pdf#page=51)
 
 - [A list of Link enabled products](https://www.ableton.com/en/link/products/)
+
+## Listing your product on ableton.com
+
+If your product supports Link we will happily list it on [our website](https://ableton.com/link/products). To be added to the listing please send the following to [link-devs@ableton.com](mailto:link-devs@ableton.com)
+- Icon in JPEG format: min. 400 x 400 pixels and 144 ppi
+- Short product description: max. 200 characters including spaces
+- Product website or app store link, pointing to your product
+
+
