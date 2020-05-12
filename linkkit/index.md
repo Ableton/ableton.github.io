@@ -48,6 +48,7 @@ the following contents:
   Objective-C header containing `UIViewController` subclass that is used to display the
   Link preference pane.
 - `LinkKit.xcframework`: A bundle containing all the assets above, compatible with Xcode from version 11.
+- `LinkKitResources.bundle`: A bundle containing localization strings.
 - [User interface assets](https://github.com/Ableton/LinkKit/tree/master/assets)
 - [LinkHut](https://github.com/Ableton/LinkKit/tree/master/examples/LinkHut): Very simple
   app to be used as example code and for testing integrations. It should build and run
@@ -60,6 +61,8 @@ add `-lc++` to your link line if you're not already using C++ in your project. T
 needed to pull in the C++ standard library.
 
 If you are using Xcode 11 you can use `LinkKit.xcframework` instead of adding `libABLLink.a` and the include path. `LinkKit.xcframework` supports Mac Catalyst.
+
+In case your app supports localization, add `LinkKitResources.bundle` to "Copy Bundle Resources" in the "Build Phases" section of the target settings in Xcode. 
 
 ### User Interface Guidelines
 
