@@ -24,7 +24,11 @@ library can best be integrated in your app.
 
 ## Concepts and Terminology
 
+**Live's Session View**:
 ![Live's Session View](live-session-view.jpg)
+
+**Live's Arrangement View**:
+![Live's Arrangement View](live-arrangement-view.jpg)
 
 * [Clip][live-manual-clips]: A clip is a single playable item, usually a MIDI sequence or
   audio file.
