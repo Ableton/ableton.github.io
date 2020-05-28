@@ -24,7 +24,7 @@ library can best be integrated in your app.
 
 ## Concepts and Terminology
 
-![Live Terminology](live-terminology.jpg)
+![Live's Session View](live-session-view.jpg)
 
 * [Clip][live-manual-clips]: A clip is a single playable item, usually a MIDI sequence or
   audio file.
