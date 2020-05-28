@@ -44,7 +44,7 @@ library can best be integrated in your app.
 * Slot: A slot is a placeholder cell in a track which may contain a clip. If a slot does
   not have a clip, then it is empty and has a stop button (which also may be toggled).
   Triggering a stop button in an empty slot will stop playback of clips in the track.
-* Song: An Ableton Live document (used interchageably with "Live Set").
+* Song: An Ableton Live document (used interchangeably with "Live Set").
 * [Track][live-manual-tracks]: A track contains clips, and may play a single clip at a
   time. Tracks come in two varieties, audio or MIDI, and may only contain audio or MIDI
   clips, respectively.
