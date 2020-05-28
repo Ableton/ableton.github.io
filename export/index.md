@@ -132,7 +132,7 @@ common properties as well:
   tempo of 120 BPM.
 * [Volume][live-manual-clip-gain]: This property refers to the volume level (gain), which
   is independent of the track volume.
-* [Warp mode][live-manual-warp-mode]: The warp mode determines which timestretching
+* [Warp mode][live-manual-warp-mode]: The warp mode determines which time-stretching
   algorithm is used to play back audio content. Using the correct warp modes can greatly
   improve Live's audio quality, especially if the global tempo and the clip tempo differ.
   If your application has a good idea about the nature of the audio content that it will
