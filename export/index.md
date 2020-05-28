@@ -82,13 +82,22 @@ set:
 
 ### Adding content to a song
 
+Content may be added to either the [session view][live-manual-session-view] or the
+[arrangement view][live-manual-arrangement-view]. The respective methods for adding clips
+to these views are clearly named, for example `createSessionMIDIClip` or
+`createArrangementMIDIClipAt`. When adding content to the session view, you can provide an
+optional scene index for the clip. If omitted, then ALSExportKit will insert the clip into
+the last scene, creating it if necessary. When adding content to the arrangement view, you
+**must** provide an offset and clip length in beat time.
+
 After creating a project, either audio or MIDI tracks can be appended to it. A song must
 have at least one track, or else cannot be written to disk. Tracks cannot be reordered,
 they must be added to the song in the order which they should appear.
 
 Once the song has some tracks, content may be added to them by adding clips. Unlike with
-tracks, clips may be added to arbitrary indexes within a track. When the song is written,
-any empty indexes will be populated with slots in all tracks.
+tracks, clips may be added to arbitrary scene indexes within a track. When the song is
+written, any empty scene indexes will be populated with slots in all tracks. The scene
+indexes are only relevant for the session view.
 
 For example, say that a song contains two tracks. A single clip is added to the first
 track. The first track now has one clip, which means that it also has one scene. The
@@ -257,11 +266,13 @@ You can also find further press kits in our [press area][ableton-press].
 [live-editions]: https://www.ableton.com/en/live/feature-comparison/
 [live-lite]: https://www.ableton.com/en/products/live-lite/
 [live-lite-features]: https://www.ableton.com/en/products/live-lite/features/
+[live-manual-arrangement-view]: https://www.ableton.com/en/manual/arrangement-view
 [live-manual-clip-gain]: https://www.ableton.com/en/manual/clip-view/#clip-pitch-and-gain
 [live-manual-clip-labels]: https://www.ableton.com/en/manual/clip-view/#clip-name-and-color
 [live-manual-clips]: https://www.ableton.com/en/manual/live-concepts/#audio-and-midi
 [live-manual-liveset]: https://www.ableton.com/en/manual/live-concepts/#live-sets
 [live-manual-saving]: https://www.ableton.com/en/manual/live-concepts/#saving-and-exporting
+[live-manual-session-view]: https://www.ableton.com/en/manual/session-view
 [live-manual-scenes]: https://www.ableton.com/en/manual/session-view/#tracks-and-scenes
 [live-manual-skins]: https://www.ableton.com/en/manual/first-steps/#setting-up-preferences
 [live-manual-straight-loops]: https://www.ableton.com/en/manual/audio-clips-tempo-and-warping/#syncing-straight-loops
