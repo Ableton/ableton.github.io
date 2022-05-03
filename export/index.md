@@ -221,13 +221,6 @@ Ableton suggests this practice so that Live Lite users do not try to open full s
 their edition, which may result in an error dialog and user frustration.
 
 
-### Live Lite distribution
-
-If you are interested in [Live Lite][live-lite] distribution for your app, please contact
-Ableton directly via <link-devs@ableton.com>. Live Lite distribution is only offered for
-apps which integrate the Ableton Live Set Export library.
-
-
 ## iOS integration
 
 For iOS apps, simply add the `libALSExportKit.a` library from the `lib` subdirectory of
