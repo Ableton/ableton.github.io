@@ -40,31 +40,24 @@ In case of questions please open a GitHub issue or contact [link-devs@ableton.co
 Download the `LinkKit.zip` file attached to the latest release. A `LinkKit.zip` file has
 the following contents:
 
-- `libABLLink.a`: A static library containing the implementation of Link. This file is
-  **not** in the repo - you must download a release to get it.
-- [`ABLLink.h`](https://github.com/Ableton/LinkKit/blob/master/LinkKit/ABLLink.h):
+- `LinkKit.xcframework`: A bundle containing the static librares for all supported platforms and the corresponding headers:
+  - [`ABLLink.h`](https://github.com/Ableton/LinkKit/blob/master/LinkKit/ABLLink.h):
   Pure C header containing the Link API.
-- [`ABLLinkSettingsViewController.h`](https://github.com/Ableton/LinkKit/blob/master/LinkKit/ABLLinkSettingsViewController.h):
+  - [`ABLLinkSettingsViewController.h`](https://github.com/Ableton/LinkKit/blob/master/LinkKit/ABLLinkSettingsViewController.h):
   Objective-C header containing `UIViewController` subclass that is used to display the
   Link preference pane.
-- `LinkKit.xcframework`: A bundle containing all the assets above, compatible with Xcode from version 11.
 - `LinkKitResources.bundle`: A bundle containing localization strings.
 - [User interface assets](https://github.com/Ableton/LinkKit/tree/master/assets)
 - [LinkHut](https://github.com/Ableton/LinkKit/tree/master/examples/LinkHut): Very simple
   app to be used as example code and for testing integrations. It should build and run
   in-place without modification.
 
-In order to build and link against `libABLLink.a`, make sure that the location of the
-header files is added to the include path of your project and location of the library
-added to the linker path. `libABLLink.a` is implemented in C++, so you may also need to
-add `-lc++` to your link line if you're not already using C++ in your project. This is
-needed to pull in the C++ standard library.
-
-If you are using Xcode 11 you can use `LinkKit.xcframework` instead of adding `libABLLink.a` and the include path. `LinkKit.xcframework` supports Mac Catalyst.
+In order to build and link against LinkKit add `LinkKit.xcframework` to your linker dependencies.
+LinkKit is implemented in C++, so you may also need to add `-lc++` to your link line if you're not already using C++ in your project. This is needed to pull in the C++ standard library.
 
 In case your app supports localization, add `LinkKitResources.bundle` to "Copy Bundle Resources" in the "Build Phases" section of the target settings in Xcode.
 
-### iOS 14 Compatibility
+### iOS 14+ Compatibility
 Link sends multicast UDP messages to 224.76.78.75:20808 on the local area network to communicate with other peers. With the release of iOS 14 Apple added security measures that require user consent and special entitlements for an app to send and receive multicast network messages.
 
 When your app launches or the user activates Link for the first time, the user will be asked to give the application permission to "find and connect to devices on the local network". If the user does not allow this, Link will not be able to connect to other peers.
