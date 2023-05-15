@@ -204,6 +204,7 @@ application thread.
 The following open source repositories integrate Link.
 *Those are not Ableton repositories. In case of issues please contact the respective maintainer. 
 If you are missing a repository in this list please open a pull request or mail to [link-devs@ableton.com](mailto:link-devs@ableton.com).*
+- [aalink](https://github.com/artfwo/aalink)
 - [abl_link](https://github.com/libpd/abl_link)
 - [AndroidLinkAudio](https://github.com/jbloit/AndroidLinkAudio)
 - [carabiner](https://github.com/brunchboy/carabiner)
