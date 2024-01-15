@@ -9,4 +9,4 @@ Make sure you have Ruby installed.
 3. Run Jekyll: `jekyll serve --watch`
 4. View the site at `http://127.0.0.1:4000/`
 
-Changes merged to master are automatically deployed via Github Pages.
+Changes merged to the `main` branch are automatically deployed via Github Pages.
