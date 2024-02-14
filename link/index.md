@@ -204,17 +204,19 @@ application thread.
 The following open source repositories integrate Link.
 *Those are not Ableton repositories. In case of issues please contact the respective maintainer. 
 If you are missing a repository in this list please open a pull request or mail to [link-devs@ableton.com](mailto:link-devs@ableton.com).*
-- [aalink](https://github.com/artfwo/aalink)
-- [abl_link](https://github.com/libpd/abl_link)
+- [libpd/abl_link](https://github.com/libpd/abl_link)
 - [AndroidLinkAudio](https://github.com/jbloit/AndroidLinkAudio)
 - [carabiner](https://github.com/brunchboy/carabiner)
+- [Go bindings](https://github.com/antoi-ne/al)
 - [JuceSampler](https://github.com/ianacaburian/AbletonLink_JuceSampler)
-- [link-python](https://github.com/gonzaloflirt/link-python)
-- [comoc/ofxAbletonLink](https://github.com/comoc/ofxAbletonLink)
-- [UnityAbletonLink](https://github.com/comoc/UnityAbletonLink)
-- [node-abletonlink](https://github.com/2bbb/node-abletonlink)
-- [2bbb/ofxAbletonLink](https://github.com/2bbb/ofxAbletonLink)
 - [lua-abletonlink](https://luarocks.org/modules/s-ol/abletonlink)
+- [node-abletonlink](https://github.com/2bbb/node-abletonlink)
+- [comoc/ofxAbletonLink](https://github.com/comoc/ofxAbletonLink)
+- [2bbb/ofxAbletonLink](https://github.com/2bbb/ofxAbletonLink)
+- [aalink (python)](https://github.com/artfwo/aalink)
+- [link-python](https://github.com/gonzaloflirt/link-python)
+- [rusty_link](https://crates.io/crates/rusty_link)
+- [UnityAbletonLink](https://github.com/comoc/UnityAbletonLink)
 - [VL.IO.AbletonLink](https://github.com/SpaceMusicZH/VL.IO.AbletonLink)
 
 The following links may provide useful information if you are trying to integrate Link
