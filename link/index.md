@@ -215,6 +215,7 @@ If you are missing a repository in this list please open a pull request or mail 
 - [2bbb/ofxAbletonLink](https://github.com/2bbb/ofxAbletonLink)
 - [aalink (python)](https://github.com/artfwo/aalink)
 - [link-python](https://github.com/gonzaloflirt/link-python)
+- [rusty_link](https://crates.io/crates/rusty_link)
 - [UnityAbletonLink](https://github.com/comoc/UnityAbletonLink)
 - [VL.IO.AbletonLink](https://github.com/SpaceMusicZH/VL.IO.AbletonLink)
 
