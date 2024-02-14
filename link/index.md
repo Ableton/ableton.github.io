@@ -208,6 +208,7 @@ If you are missing a repository in this list please open a pull request or mail 
 - [abl_link](https://github.com/libpd/abl_link)
 - [AndroidLinkAudio](https://github.com/jbloit/AndroidLinkAudio)
 - [carabiner](https://github.com/brunchboy/carabiner)
+- [Go bindings](https://github.com/antoi-ne/al)
 - [JuceSampler](https://github.com/ianacaburian/AbletonLink_JuceSampler)
 - [link-python](https://github.com/gonzaloflirt/link-python)
 - [comoc/ofxAbletonLink](https://github.com/comoc/ofxAbletonLink)
