@@ -1,10 +1,10 @@
 ---
 layout: link
 active_page: link
-title: Ableton @ GitHub
+title: Ableton on GitHub
 ---
 
-# Ableton @ GitHub
+# Ableton on GitHub
 
 Ableton provides a set of libraries and tools for third party developers. You can find the
 open source repositories on our [GitHub organization page](https://github.com/ableton).
