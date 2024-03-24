@@ -1,5 +1,4 @@
 ---
-lang: en-US
 layout: linkkit
 active_page: linkkit
 title: LinkKit

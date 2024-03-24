@@ -1,5 +1,4 @@
 ---
-lang: en-US
 layout: link
 active_page: link
 title: Link Documentation
