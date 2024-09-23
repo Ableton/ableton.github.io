@@ -30,3 +30,9 @@ Ableton Live project files. Currently only ALSExportKit for iOS is available. It
 governed by the [ALS Export SDK License](/export/assets/ALSExport_License_v1.0.pdf). To
 get access to ALSExportKit please register
 [here](https://www.ableton.com/en/link/sdk/license-request/).
+
+
+[Third party plugin developers portal](/third_party_plugin_dev_portal/) gather
+resources to help plugin manufacturers create products that are compatible with
+Ableton products.
+
