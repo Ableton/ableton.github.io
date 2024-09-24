@@ -1,20 +1,20 @@
 ---
 layout: link
 active_page: VST3presetSwitchingPerformEditAlternatives.
-title: Recommendations to VST3 plugins manufacturers regarding bulk calls to performEdit
+title: Recommendations to VST3 plugin manufacturers regarding bulk calls to performEdit
 ---
 
-# Recommendations to VST3 plugins manufacturers regarding bulk calls to performEdit
+# Recommendations to VST3 plugin manufacturers regarding bulk calls to performEdit
 ## Introduction
 
 For some VST3 plugins, Ableton receives reports of user interface lag when users switch presets from the plugin editor. After investigation, it seems that some VST3 manufacturers implement preset changes from the VST3 editor by calling performEdit for all parameters in order to notify both the DAW and the VST3 controller counterpart of its new state.
 
 Live needs time to react to performEdit for our parameter mapping system.
-Unfortunately, we receive calls from performEdit synchronously, and cannot optimize for situations where many successives calls of performEdit will happen.
+Unfortunately, we receive calls from performEdit synchronously, and cannot optimize for situations where many successive calls of performEdit will happen.
 
 ## Steinberg’s recommendations: editor uses private communication to send new values to processor
 
-This solution is about using private communication (for example sending a custom IMessage) from editor to component with all the new values to set before calling restartComponent and making sure that the controller will return the correct information before making a call to restartComponent(kParamValuesChanged).
+This solution is to use private communication (for example sending a custom IMessage) from editor to component with all the new values to set before calling restartComponent and making sure that the controller will return the correct information before making a call to restartComponent(kParamValuesChanged).
 
 See below some quotes from a Steinberg developer about it:
 
