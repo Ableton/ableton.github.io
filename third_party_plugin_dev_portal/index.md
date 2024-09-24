@@ -14,8 +14,8 @@ parameter.
 
 
 Instead, the editor should use private communication (for example sending
-custom `IMessage`) to send all the new values to the controller. Then, the
-controller shall be able to return the correct information before making a call
+custom `IMessage`) to send all the new values to the processor. Then, the
+processor shall be able to return the correct information before making a call
 to `restartComponent(kParamValuesChanged)`.
 
 More details at [performEdit alternatives](VST3presetSwitchingPerformEditAlternatives).

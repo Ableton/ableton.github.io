@@ -14,7 +14,7 @@ Unfortunately, we receive calls from performEdit synchronously, and cannot optim
 
 ## Steinberg’s recommendations: editor uses private communication to send new values to processor
 
-This solution is to use private communication (for example sending a custom IMessage) from editor to component with all the new values to set before calling restartComponent and making sure that the controller will return the correct information before making a call to restartComponent(kParamValuesChanged).
+This solution is to use private communication (for example sending a custom IMessage) from editor to processor with all the new values to set before calling restartComponent and making sure that the controller will return the correct information before making a call to restartComponent(kParamValuesChanged).
 
 See below some quotes from a Steinberg developer about it:
 
@@ -124,7 +124,7 @@ void sendPatternToController (int patternIndex)
 }
 ```
 
-#### Component part
+#### Processor Component part
 
 Override in your own JuceVST3Component
 
