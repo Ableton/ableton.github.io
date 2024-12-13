@@ -14,6 +14,7 @@ If your issue is not mentioned here, you can submit a **developer support reques
 ## Articles
 
 1. [Lag/CPU spikes when changing presets in VST3 plugins](vst3-preset-recall-lag)
+2. [Supporting MPE with plugins in Live](mpe-support-plugins)
 
 ***
 
