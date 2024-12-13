@@ -13,8 +13,10 @@ If your issue is not mentioned here, you can submit a **developer support reques
 
 ## Articles
 
-1. [Lag/CPU spikes when changing presets in VST3 plugins](vst3-preset-recall-lag)
-2. [Supporting MPE with plugins in Live](mpe-support-plugins)
+1. [Debugging plugins in Live on macOS](debugging-plugins-in-live-on-macos)
+2. [Code-signing plugins for Live on macOS](code-signing-plugins)
+3. [Lag/CPU spikes when changing presets in VST3 plugins](vst3-preset-recall-lag)
+4. [Supporting MPE with plugins in Live](mpe-support-plugins)
 
 ***
 
