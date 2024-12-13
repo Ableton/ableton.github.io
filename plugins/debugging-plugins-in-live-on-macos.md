@@ -20,9 +20,9 @@ The easiest way to work around the hardened runtime is to temporarily disable ma
 
 ## Option 2: Signing the Live application with the debugger entitlement
 
-If you prefer to keep SIP enabled, you can codesign the Live application yourself with the 'com.apple.security.get-task-allow' entitlement. This will allow you to attach a debugger. You can use the `codesign` command to re-sign the Live application. You can also sign with the `com.apple.security.cs.allow-dyld-environment-variables` entitlement to enable sanitizers. Note: These things are only suggested as a solution for debugging purposes, and should only be used for debugging purposes on your own machine - it is not advice that should be passed on to users.
+If you prefer to keep SIP enabled, you can code-sign the Live application yourself with the 'com.apple.security.get-task-allow' entitlement. This will allow you to attach a debugger. You can use the `codesign` command to re-sign the Live application. You can also sign with the `com.apple.security.cs.allow-dyld-environment-variables` entitlement to enable sanitizers. Note: These things are only suggested as a solution for debugging purposes, and should only be used for debugging purposes on your own machine - it is not advice that should be passed on to users.
 
-Here is a bash script `codesign_live.sh` that will codesign the Live application with an Ad-Hoc signature and the required entitlements for launching live with the debugger and/or sanitizer:
+Here is a bash script `codesign_live.sh` that will code-sign the Live application with an Ad-Hoc signature and the required entitlements for launching live with the debugger and/or sanitizer:
 
 ```bash
 #!/bin/bash
@@ -30,7 +30,7 @@ Here is a bash script `codesign_live.sh` that will codesign the Live application
 # Exit on any error
 set -e
 
-# Path to Live application - modify if you need to codesign a different version of Live
+# Path to Live application - modify if you need to code-sign a different version of Live
 LIVE_APP="/Applications/Ableton Live 12 Suite.app"
 TEMP_PLIST="/tmp/debug_entitlements.plist"
 
@@ -41,10 +41,9 @@ codesign -d --entitlements - "$LIVE_APP" --xml > $TEMP_PLIST
 # - com.apple.security.get-task-allow: Enables debugger attachment to the application
 # - com.apple.security.cs.allow-dyld-environment-variables: Allows sanitizers
 
-# Add other entitlements
+# Add other entitlements, which may be useful for debugging
 # - com.apple.security.cs.disable-library-validation: Allows loading of unsigned libraries/plugins
 # - com.apple.security.cs.allow-unsigned-executable-memory: Permits JIT compilation and dynamic code generation
-
 
 for entitlement in \
     com.apple.security.cs.disable-library-validation \
@@ -74,6 +73,7 @@ chmod +x codesign_live.sh
 
 Note: This bash script has been adapted from the script provided by github user talaviram [here](https://gist.github.com/talaviram/1f21e141a137744c89e81b58f73e23c3).
 
+If you do code-sign the Live application, you will need to re-sign it every time you update Live. You should also make sure that you test your plugin in an unmodified version of Live if you want to be check how it will behave on a user's machine.
 
 ## Debugging AUv3 plugins on Apple Silicon Macs
 
