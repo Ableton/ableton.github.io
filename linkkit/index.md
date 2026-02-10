@@ -172,7 +172,7 @@ connected. This state can be queried with the
 `ABLLinkIsConnected` function.
 
 Start Stop Sync is an opt in feature. To allow the user to enable Start Stop Sync with
-a toggle in the ABLLinkSettingsViewController a Boolean entry `YES` under the key
+a toggle in the ABLLinkSettingsViewController a Boolean entry `YES` with the key
 `ABLLinkStartStopSyncSupported` must be added to `Info.plist`.
 The app can observe the state via the
 `ABLLinkIsStartStopSyncEnabled` function
@@ -183,6 +183,13 @@ reflect the Start Stop Sync enabled state. The interface to the start/stop state
 the same wether Start Stop Sync is enabled or not. The only difference is that changes are
 not kept in sync with other peers. This way the app does not have to change its behavior
 depending on the feature being enabled or disabled.
+
+Link Audio is an opt in feature that provides the ability to send audio channels to peers
+in a Link session. To allow the user to enable audio sharing a Boolean entry `YES` with
+the key `ABLLinkAudioSupported` must be added to the `Info.plist`. A default peer name
+that identifies the app to other peers in the Link session can be set with a String entry
+with the key `ABLLinkPeerName`. This name can be changed by the user in the settings view
+at any time.
 
 ### App Life Cycle
 
