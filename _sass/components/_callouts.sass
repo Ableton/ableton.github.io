@@ -1,0 +1,24 @@
+.callout
+  margin: 1.5em 0
+  padding: .85em 1.25em
+  border-left: 4px solid $dolphin
+  background-color: lighten($dolphin, 3%)
+
+  p:last-child
+    margin-bottom: 0
+
+  .callout__title
+    font-weight: $medium
+    margin-bottom: .4em
+
+  &.callout--note
+    border-left-color: $teal
+    background-color: #e8f8f9
+
+  &.callout--caution
+    border-left-color: $coral
+    background-color: #fef0ee
+
+  &.callout--tip
+    border-left-color: $goldfish
+    background-color: #fefbe8

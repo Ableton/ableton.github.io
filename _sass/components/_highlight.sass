@@ -1,0 +1,69 @@
+// Syntax highlighting for extensions-sdk pages (Rouge / dark theme)
+// Scoped to .sdk-content so it doesn't affect the rest of the site.
+
+.sdk-content .highlight
+  background-color: #1a1a1a
+  border-radius: 3px
+  margin: 1.25em 0
+
+  pre
+    background: none
+    border-radius: 0
+    margin: 0
+
+    code
+      padding: 1.5em 1.75em
+      color: #e8e8e8
+
+  // Comments
+  .c, .c1, .cm, .cs, .cp
+    color: #737373
+    font-style: italic
+
+  // Keywords
+  .k, .kd, .kn, .kr, .kc
+    color: #6DCBFF
+
+  // Keyword types
+  .kt
+    color: #D5B3FF
+
+  // Strings
+  .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss
+    color: #B6FFC0
+
+  // Numbers
+  .mi, .mf, .mh, .mo, .il, .m
+    color: #FED134
+
+  // Class names
+  .nc
+    color: #D5B3FF
+
+  // Function / method names
+  .nf, .fm
+    color: #6DCBFF
+
+  // Built-ins
+  .nb
+    color: #6682FF
+
+  // Operators
+  .o, .ow
+    color: #6DCBFF
+
+  // Boolean / null
+  .kp
+    color: #FFA07A
+
+  // HTML tags
+  .nt
+    color: #6DCBFF
+
+  // HTML attributes
+  .na
+    color: #B6FFC0
+
+  // Errors (shouldn't normally show)
+  .err
+    color: #FE5948

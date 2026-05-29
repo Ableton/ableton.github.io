@@ -1,0 +1,35 @@
+.sdk-wrapper
+  max-width: 1100px
+
+.sdk-layout
+  display: flex
+  align-items: flex-start
+
+.sdk-content
+  flex: 1
+  min-width: 0
+
+  table
+    width: 100%
+    border-collapse: collapse
+    margin: 1.25em 0
+    +type-zoom($font-size-m, $bp-4, $font-size-ml)
+
+  th, td
+    text-align: left
+    padding: .5em .75em
+    border-bottom: 1px solid $dolphin
+
+  th
+    font-weight: $medium
+    border-bottom: 2px solid $black
+
+  pre
+    overflow-x: auto
+
+    code
+      display: block
+      font-family: monospace
+      font-size: 85%
+      line-height: 1.6
+      white-space: pre
