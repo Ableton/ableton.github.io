@@ -309,6 +309,7 @@ If you are missing a repository in this list please open a pull request or mail 
 - [2bbb/ofxAbletonLink](https://github.com/2bbb/ofxAbletonLink)
 - [aalink (python)](https://github.com/artfwo/aalink)
 - [link-python](https://github.com/gonzaloflirt/link-python)
+- [rpi-linkaudio](https://github.com/ty-art-ty/rpi-linkaudio)
 - [rusty_link](https://crates.io/crates/rusty_link)
 - [fwcd/swift-link](https://github.com/fwcd/swift-link)
 - [Tidal (Haskell)](https://github.com/tidalcycles/Tidal/tree/dev/tidal-link)
