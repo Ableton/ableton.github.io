@@ -61,7 +61,7 @@ In case your app supports localization, add `LinkKitResources.bundle` to "Copy B
 Link sends multicast UDP messages to 224.76.78.75:20808 on the local area network to communicate with other peers. With the release of iOS 14 Apple added security measures that require user consent and special entitlements for an app to send and receive multicast network messages.
 
 When your app launches or the user activates Link for the first time, the user will be asked to give the application permission to "find and connect to devices on the local network". If the user does not allow this, Link will not be able to connect to other peers.
-You can give the user more detailed information on why network access is necessary by adding a [NSLocalNetworkUsageDescription](https://developer.apple.com/documentation/bundleresources/information_property_list/nslocalnetworkusagedescription) to `Info.plist`.
+Therefore, you must add an [NSLocalNetworkUsageDescription](https://developer.apple.com/documentation/bundleresources/information_property_list/nslocalnetworkusagedescription) entry to `Info.plist`. This can also be used to give the user more detailed information on why network access is necessary.
 
 When using Xcode 12 or later, and when building for iOS 14 and above, you will have to request the `com.apple.developer.networking.multicast` entitlement from Apple to run your app with Link on a device. This is even required running a build directly from Xcode. When requesting the entitlement from Apple, you can reference this documentation and the [Ableton Link product page](https://www.ableton.com/link/).
 
