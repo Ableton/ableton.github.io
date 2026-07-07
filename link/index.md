@@ -308,6 +308,7 @@ If you are missing a repository in this list please open a pull request or mail 
 - [comoc/ofxAbletonLink](https://github.com/comoc/ofxAbletonLink)
 - [2bbb/ofxAbletonLink](https://github.com/2bbb/ofxAbletonLink)
 - [aalink (python)](https://github.com/artfwo/aalink)
+- [aalink-js (javascript)](https://github.com/artfwo/aalink-js)
 - [link-python](https://github.com/gonzaloflirt/link-python)
 - [rpi-linkaudio](https://github.com/ty-art-ty/rpi-linkaudio)
 - [rusty_link](https://crates.io/crates/rusty_link)
