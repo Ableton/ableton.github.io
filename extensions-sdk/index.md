@@ -16,5 +16,5 @@ The Ableton Extensions SDK lets you extend Ableton Live using modern JavaScript 
 To get started:
 
 1. If you aren't already part of the Ableton Beta Program, [sign up on Centercode](https://www.ableton.com/beta/){:target="_blank"}.
-2. [Download and install Live Beta (12.4.5b3)](https://ableton.centercode.com/r/?4acefad1853d474eaddecc5ce72022e6){:target="_blank"}.
-3. [Download the Extensions SDK and Documentation](https://ableton.centercode.com/project/version/item.html?cap=ea2ce822bd02401dba446c068717bc68&arttypeid={25c94141-9dd5-48e7-8775-632dd5861fa6}&artid={BEE6D733-E750-443B-BD8F-6CD4519A6F21}){:target="_blank"}.
+2. [Download and install the latest Live 12.4.5 Beta](https://ableton.centercode.com/project/version/default.html?cap=ea2ce822-bd02-401d-ba44-6c068717bc68&arttypeid=25c94141-9dd5-48e7-8775-632dd5861fa6){:target="_blank"}.
+3. [Download the Extensions SDK and Documentation](https://ableton.centercode.com/project/version/item.html?cap=ea2ce822bd02401dba446c068717bc68&arttypeid={25c94141-9dd5-48e7-8775-632dd5861fa6}&artid={66134554-50D5-490E-AAD6-955E92BE7683}){:target="_blank"}.
