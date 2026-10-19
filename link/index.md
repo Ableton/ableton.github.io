@@ -129,44 +129,8 @@ every application should start according to its quantum and phase.
 Link Audio extends Link with the ability to share audio channels between peers in a Link
 session. This allows applications to not only synchronize tempo, beat, phase, and
 transport, but also exchange audio streams that can be aligned to the shared Link timeline.
-
-#### Channels
-
-A **channel** is a named audio stream that can be announced by one peer and received by
-one or more peers in a Link session. Each channel is identified by a unique
-**channel ID** that remains stable for the lifetime of that channel. Channels also have
-human-readable names intended for display purposes - these names can change over time,
-but the channel ID remains constant.
-
-When a channel is created, it's associated with a specific peer, which
-also has its own unique peer ID and peer name. Multiple channels can be published by
-the same peer, each with its own channel ID. This allows a single application to offer
-multiple audio streams, such as different instruments, tracks, or buses.
-
-Channel and peer IDs are persistent identifiers that applications should use
-for tracking and referencing specific audio streams, while names provide user-friendly
-labels for display in user interfaces.
-
-#### Sinks and Sources
-
-Audio channels are implemented through a sink/source pattern:
-
-- A **sink** is the publishing side of a channel. When an application creates a sink, it
-  announces a new channel to the Link session, making it discoverable by all peers. The
-  sink is responsible for capturing audio, converting it to the required format, and
-  transmitting it over the network. Importantly, sinks only send data when at least one
-  corresponding source exists - if no one is listening, no network bandwidth is consumed.
-
-- A **source** is the receiving side. When an application creates a source for a specific
-  channel ID, it subscribes to that channel and begins receiving audio buffers as they
-  arrive. Multiple peers can create sources for the same channel, allowing one-to-many
-  distribution. Sources receive buffers asynchronously via callbacks on Link-managed
-  threads.
-
-Audio buffers are transmitted as interleaved 16-bit signed integer. When commiting a buffer
-to Link Audio the current timeline is used as a reference to generate the respective buffer
-timing information. When receiving a buffer the receiver's timeline can be used to align
-the buffer's audio to the local audio.
+The [Link Audio concepts](#link-audio-concepts) below explain how those streams are
+discovered and aligned.
 
 ## Link API
 
@@ -245,53 +209,40 @@ application thread.
 
 ## Link Audio API
 
-The Link Audio API extends Link with audio sharing capabilities. To use Link Audio, replace
-the `Link` with `LinkAudio` class in your application. `Link` and `LinkAudio` should not be
-used simultaneously.
+Audio sharing is optional within a Link session. A participant can announce and discover
+audio channels when Link Audio is enabled, and can turn audio sharing off without
+interrupting Link's tempo and beat synchronization.
 
-**Important Note on Header Inclusion:** The Link headers do not follow Include-What-You-Use
-(IWYU) principles. When using Link Audio functionality, you must include
-`<ableton/LinkAudio.hpp>` in every compilation unit that uses `LinkAudio`, even if other
-Link headers are already included.
+### Channels and Discovery
 
-When Link Audio is being enabled, Link starts announcing and discovering other Link Audio peers.
-Link Audio can be enabled and disabled at runtime without affecting Link's tempo and beat
-synchronization.
+A **channel** is a named audio stream published by one peer and available to other peers
+in the session. A peer can publish several channels, such as separate instruments, tracks,
+or buses. Channels can appear, disappear, or be renamed as participants change what they
+share.
 
-### Discovering Link Audio Channels
+Each channel and peer has an ID that stays stable for the lifetime of the channel. Names
+are intended for display and may change; IDs identify the stream a receiver has chosen
+to follow. Discovering a channel makes it available to receive, but does not itself start
+audio transmission.
 
-The `ChannelsChangedCallback` can be used to monitor when channels appear or disappear. IDs for
-channels and peers are persistent. Whenever a peer or channel name changes, the callback is invoked.
+### Sinks and Sources
 
-### Sending Audio
+A **sink** publishes a channel and supplies its audio buffers. A **source** subscribes to
+one channel and receives its buffers. Several sources can subscribe to the same channel,
+so one publisher can send audio to multiple peers. A sink sends audio only while at least
+one source is subscribed.
 
-To publish an audio channel, create a `LinkAudioSink`.
-Creating a sink immediately announces a new channel to the Link session with the given
-name. The channel becomes discoverable by all peers, and they can create sources to
-subscribe to it using the channel's ID. The `maxSamples` parameter should account for the
-total number of samples in your audio callback (numFrames * numChannels).
+### Timing and Alignment
 
-The sink only transmits audio when at least one source is subscribed to its channel. This
-means you can create sinks preemptively without wasting network bandwidth until someone
-actually wants to receive the audio.
+Audio is exchanged in buffers whose timing is expressed relative to the Link session.
+The sender uses the same session state, quantum, and beat position for the shared buffer
+as it used to render that audio locally. This lets a receiver map the buffer's beginning
+and end into its own beat timeline and align the received audio with local playback, even
+when the peers use different beat values or quantum settings.
 
-**Important:** The session state, quantum, and beat time used for committing the buffer
-must be the same as those used for rendering the audio locally. Always capture the
-session state and calculate beat positions before rendering, then use those same values
-when committing the buffer.
-
-### Receiving Audio
-
-To subscribe and receive audio from a specific channel, create a `LinkAudioSource` with a
-channel ID and a callback. The channels Id is obtained from channel discovery. The callback
-is invoked on a Link-managed thread whenever new audio buffers arrive from the corresponding
-sink.
-
-Use `info.beginBeats()` and `info.endBeats()` to map the remote beat time to your local
-Link session state, accounting for differences in quantum and timeline offsets. These
-methods return `std::nullopt` if the buffer originates from a different Link session.
-Note that incoming buffers don't match the receivers audio engine block size and sample rate
-as those properties are dependant on the senders properties and network requirements.
+A buffer from a different Link session cannot be aligned to the current session. Received
+buffers may also have a different sample rate or size from the receiver's audio engine,
+so the receiving application must adapt them to its own playback process.
 
 ## Test Plan
 
