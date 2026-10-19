@@ -1,5 +1,5 @@
 ---
-layout: link
+layout: default
 active_page: plugins
 title: Third party plugin developers portal
 ---

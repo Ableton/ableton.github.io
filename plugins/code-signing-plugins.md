@@ -1,5 +1,5 @@
 ---
-layout: link
+layout: default
 active_page: code-signing-plugins
 title: Code-signing plugins for Live on macOS
 ---

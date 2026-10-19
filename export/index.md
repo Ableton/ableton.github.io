@@ -1,5 +1,5 @@
 ---
-layout: link
+layout: default
 title: Live Set Export Documentation
 ---
 

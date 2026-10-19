@@ -1,5 +1,5 @@
 ---
-layout: link
+layout: default
 active_page: link
 title: Ableton @ GitHub
 ---
