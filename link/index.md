@@ -7,11 +7,12 @@ title: Link Documentation
 # Ableton Link
 
 [Ableton Link](https://ableton.com/link) is a technology that synchronizes musical beat,
-tempo, phase, and start/stop commands across multiple applications running on one or more
-devices. Applications on devices connected to a local network discover each other
-automatically and form a musical session in which each participant can perform
-independently: anyone can start or stop while still staying in time. Anyone can change
-the tempo, the others will follow. Anyone can join or leave without disrupting the session.
+tempo, phase, and optionally start/stop commands and arrangement position across multiple
+applications running on one or more devices. Applications on devices connected to a local
+network discover each other automatically and form a musical session in which each
+participant can perform independently: anyone can start or stop while still staying in
+time. Anyone can change the tempo, the others will follow. Anyone can join or leave
+without disrupting the session.
 
 Ableton provides two options for developers interested in integrating Link into their
 musical applications:
@@ -39,6 +40,7 @@ the most natural way to map your application's musical concepts onto Link's
 synchronization model. For this reason, it's important to gain an intuitive understanding
 of how Link synchronizes **tempo**, **beat**, and **phase**.
 Version 3 of Link makes it possible to share **start** and **stop** commands.
+Arrangement Sync can additionally share the position in an arrangement.
 
 ### Tempo Synchronization
 
@@ -123,6 +125,25 @@ soon as an application joins a session.
 As every application handles start and stop commands according to its capabilities and
 quantization, it is not expected that applications start or stop at the same time. Rather
 every application should start according to its quantum and phase.
+
+### Arrangement Synchronization
+
+By default, Link aligns tempo and phase, but each participant can have its own beat numbers:
+beat 1 in one app might correspond to beat 9 in another. Arrangement Sync also shares the
+beat position among participants that have the feature enabled. This lets apps with a
+song or arrangement timeline agree on where playback is within it and follow position
+changes made by another arrangement-synced participant.
+
+Arrangement Sync builds on Start/Stop Sync. Enabling it also enables Start/Stop Sync;
+disabling Start/Stop Sync turns Arrangement Sync off. An arrangement-synced participant
+can send start/stop changes to peers using only Start/Stop Sync. Start/stop changes from
+those peers do not change the transport state of arrangement-synced participants.
+
+Starting playback and jumping to another position have different timing. When playback
+starts, arrangement-synced participants with the same quantum should wait for the same
+phase-aligned launch time and begin at the shared arrangement beat. A position jump during
+playback changes the shared beat immediately, even between quantum boundaries, without
+restarting transport.
 
 ### Link Audio
 
@@ -319,6 +340,25 @@ Apps that are already in a session should never have any kind of beat time or au
 - Start playback in App &rarr; App should start playback according to its quantization.
 - Stop playback in App &rarr; App and LinkHut should stop playback.
 - Start playback in App &rarr; App and LinkHut should start playback according to their quantizations.
+
+### Arrangement Sync
+
+These cases apply to apps that support Arrangement Sync.
+
+#### ARRANGEMENT-1: Arrangement-synced peers share their position and launch time.
+
+- Open LinkHut and App, enable Link and Arrangement Sync in both, and set both quantums to the same value. Leave both stopped.
+- Start playback in LinkHut &rarr; both should begin at the same quantized launch time and
+  show the same arrangement beat as playback advances.
+- Stop playback in App &rarr; both should stop.
+- Start playback in App &rarr; both should again begin at the same quantized launch time
+  and continue from the same arrangement beat.
+
+#### ARRANGEMENT-2: A position jump is shared immediately without restarting playback.
+
+- Open LinkHut and App, enable Link and Arrangement Sync in both, set both quantums to the same value and start playback.
+- After playback has advanced several bars, initiate a beat time jump in LinkHut &rarr; both peers should jump to beat 0 immediately, without waiting for the next boundary or restarting transport.
+- If App supports seeking, jump to another arrangement beat in App &rarr; LinkHut should follow immediately while both continue playing.
 
 ### Audio Engine
 
