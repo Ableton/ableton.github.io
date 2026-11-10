@@ -8,13 +8,13 @@ title: Ableton Extensions SDK
 
 <div class="callout callout--caution">
   <p class="callout__title">Public beta only</p>
-  <p>The Extensions SDK is available exclusively in the <strong>Live 12.4.5 public beta</strong>. It does not work with any earlier version of Live.</p>
+  <p>The Extensions SDK is available in the <strong>Live 12.4.5 public beta</strong> and subsequent beta releases. It does not work with any earlier version of Live.</p>
 </div>
 
-The Ableton Extensions SDK lets you extend Ableton Live using modern JavaScript and TypeScript. It is currently available as a public beta alongside Live 12.4.5.
+The Ableton Extensions SDK lets you extend Ableton Live using modern JavaScript and TypeScript. It is currently available as a public beta alongside Live 12.4.5 and subsequent beta releases.
 
 To get started:
 
 1. If you aren't already part of the Ableton Beta Program, [sign up on Centercode](https://www.ableton.com/beta/){:target="_blank"}.
-2. [Download and install the latest Live 12.4.5 Beta](https://ableton.centercode.com/project/version/default.html?cap=ea2ce822-bd02-401d-ba44-6c068717bc68&arttypeid=25c94141-9dd5-48e7-8775-632dd5861fa6){:target="_blank"}.
+2. [Download and install the latest Live 12 Beta](https://ableton.centercode.com/project/version/default.html?cap=ea2ce822-bd02-401d-ba44-6c068717bc68&arttypeid=25c94141-9dd5-48e7-8775-632dd5861fa6){:target="_blank"}.
 3. [Download the Extensions SDK and Documentation](https://ableton.centercode.com/project/version/item.html?cap=ea2ce822bd02401dba446c068717bc68&arttypeid={25c94141-9dd5-48e7-8775-632dd5861fa6}&artid={66134554-50D5-490E-AAD6-955E92BE7683}){:target="_blank"}.
