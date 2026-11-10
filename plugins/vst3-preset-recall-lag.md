@@ -1,5 +1,5 @@
 ---
-layout: link
+layout: default
 active_page: vst3-preset-lag
 title: Lag when changing presets in VST3 plugins
 ---

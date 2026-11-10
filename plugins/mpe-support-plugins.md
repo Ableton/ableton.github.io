@@ -1,5 +1,5 @@
 ---
-layout: link
+layout: default
 active_page: mpe-support-plugins
 title: Supporting MPE with plugins in Live
 ---

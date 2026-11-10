@@ -1,5 +1,5 @@
 ---
-layout: link
+layout: default
 active_page: debugging-plugins-in-live
 title: Debugging plugins in Live
 ---

@@ -7,11 +7,12 @@ title: Link Documentation
 # Ableton Link
 
 [Ableton Link](https://ableton.com/link) is a technology that synchronizes musical beat,
-tempo, phase, and start/stop commands across multiple applications running on one or more
-devices. Applications on devices connected to a local network discover each other
-automatically and form a musical session in which each participant can perform
-independently: anyone can start or stop while still staying in time. Anyone can change
-the tempo, the others will follow. Anyone can join or leave without disrupting the session.
+tempo, phase, and optionally start/stop commands and arrangement position across multiple
+applications running on one or more devices. Applications on devices connected to a local
+network discover each other automatically and form a musical session in which each
+participant can perform independently: anyone can start or stop while still staying in
+time. Anyone can change the tempo, the others will follow. Anyone can join or leave
+without disrupting the session.
 
 Ableton provides two options for developers interested in integrating Link into their
 musical applications:
@@ -39,6 +40,7 @@ the most natural way to map your application's musical concepts onto Link's
 synchronization model. For this reason, it's important to gain an intuitive understanding
 of how Link synchronizes **tempo**, **beat**, and **phase**.
 Version 3 of Link makes it possible to share **start** and **stop** commands.
+Arrangement Sync can additionally share the position in an arrangement.
 
 ### Tempo Synchronization
 
@@ -124,49 +126,32 @@ As every application handles start and stop commands according to its capabiliti
 quantization, it is not expected that applications start or stop at the same time. Rather
 every application should start according to its quantum and phase.
 
+### Arrangement Synchronization
+
+By default, Link aligns tempo and phase, but each participant can have its own beat numbers:
+beat 1 in one app might correspond to beat 9 in another. Arrangement Sync also shares the
+beat position among participants that have the feature enabled. This lets apps with a
+song or arrangement timeline agree on where playback is within it and follow position
+changes made by another arrangement-synced participant.
+
+Arrangement Sync builds on Start/Stop Sync. Enabling it also enables Start/Stop Sync;
+disabling Start/Stop Sync turns Arrangement Sync off. An arrangement-synced participant
+can send start/stop changes to peers using only Start/Stop Sync. Start/stop changes from
+those peers do not change the transport state of arrangement-synced participants.
+
+Starting playback and jumping to another position have different timing. When playback
+starts, arrangement-synced participants with the same quantum should wait for the same
+phase-aligned launch time and begin at the shared arrangement beat. A position jump during
+playback changes the shared beat immediately, even between quantum boundaries, without
+restarting transport.
+
 ### Link Audio
 
 Link Audio extends Link with the ability to share audio channels between peers in a Link
 session. This allows applications to not only synchronize tempo, beat, phase, and
 transport, but also exchange audio streams that can be aligned to the shared Link timeline.
-
-#### Channels
-
-A **channel** is a named audio stream that can be announced by one peer and received by
-one or more peers in a Link session. Each channel is identified by a unique
-**channel ID** that remains stable for the lifetime of that channel. Channels also have
-human-readable names intended for display purposes - these names can change over time,
-but the channel ID remains constant.
-
-When a channel is created, it's associated with a specific peer, which
-also has its own unique peer ID and peer name. Multiple channels can be published by
-the same peer, each with its own channel ID. This allows a single application to offer
-multiple audio streams, such as different instruments, tracks, or buses.
-
-Channel and peer IDs are persistent identifiers that applications should use
-for tracking and referencing specific audio streams, while names provide user-friendly
-labels for display in user interfaces.
-
-#### Sinks and Sources
-
-Audio channels are implemented through a sink/source pattern:
-
-- A **sink** is the publishing side of a channel. When an application creates a sink, it
-  announces a new channel to the Link session, making it discoverable by all peers. The
-  sink is responsible for capturing audio, converting it to the required format, and
-  transmitting it over the network. Importantly, sinks only send data when at least one
-  corresponding source exists - if no one is listening, no network bandwidth is consumed.
-
-- A **source** is the receiving side. When an application creates a source for a specific
-  channel ID, it subscribes to that channel and begins receiving audio buffers as they
-  arrive. Multiple peers can create sources for the same channel, allowing one-to-many
-  distribution. Sources receive buffers asynchronously via callbacks on Link-managed
-  threads.
-
-Audio buffers are transmitted as interleaved 16-bit signed integer. When commiting a buffer
-to Link Audio the current timeline is used as a reference to generate the respective buffer
-timing information. When receiving a buffer the receiver's timeline can be used to align
-the buffer's audio to the local audio.
+The [Link Audio concepts](#link-audio-concepts) below explain how those streams are
+discovered and aligned.
 
 ## Link API
 
@@ -245,53 +230,215 @@ application thread.
 
 ## Link Audio API
 
-The Link Audio API extends Link with audio sharing capabilities. To use Link Audio, replace
-the `Link` with `LinkAudio` class in your application. `Link` and `LinkAudio` should not be
-used simultaneously.
+Audio sharing is optional within a Link session. A participant can announce and discover
+audio channels when Link Audio is enabled, and can turn audio sharing off without
+interrupting Link's tempo and beat synchronization.
 
-**Important Note on Header Inclusion:** The Link headers do not follow Include-What-You-Use
-(IWYU) principles. When using Link Audio functionality, you must include
-`<ableton/LinkAudio.hpp>` in every compilation unit that uses `LinkAudio`, even if other
-Link headers are already included.
+### Channels and Discovery
 
-When Link Audio is being enabled, Link starts announcing and discovering other Link Audio peers.
-Link Audio can be enabled and disabled at runtime without affecting Link's tempo and beat
-synchronization.
+A **channel** is a named audio stream published by one peer and available to other peers
+in the session. A peer can publish several channels, such as separate instruments, tracks,
+or buses. Channels can appear, disappear, or be renamed as participants change what they
+share.
 
-### Discovering Link Audio Channels
+Each channel and peer has an ID that stays stable for the lifetime of the channel. Names
+are intended for display and may change; IDs identify the stream a receiver has chosen
+to follow. Discovering a channel makes it available to receive, but does not itself start
+audio transmission.
 
-The `ChannelsChangedCallback` can be used to monitor when channels appear or disappear. IDs for
-channels and peers are persistent. Whenever a peer or channel name changes, the callback is invoked.
+### Sinks and Sources
 
-### Sending Audio
+A **sink** publishes a channel and supplies its audio buffers. A **source** subscribes to
+one channel and receives its buffers. Several sources can subscribe to the same channel,
+so one publisher can send audio to multiple peers. A sink sends audio only while at least
+one source is subscribed.
 
-To publish an audio channel, create a `LinkAudioSink`.
-Creating a sink immediately announces a new channel to the Link session with the given
-name. The channel becomes discoverable by all peers, and they can create sources to
-subscribe to it using the channel's ID. The `maxSamples` parameter should account for the
-total number of samples in your audio callback (numFrames * numChannels).
+### Timing and Alignment
 
-The sink only transmits audio when at least one source is subscribed to its channel. This
-means you can create sinks preemptively without wasting network bandwidth until someone
-actually wants to receive the audio.
+Audio is exchanged in buffers whose timing is expressed relative to the Link session.
+The sender uses the same session state, quantum, and beat position for the shared buffer
+as it used to render that audio locally. This lets a receiver map the buffer's beginning
+and end into its own beat timeline and align the received audio with local playback, even
+when the peers use different beat values or quantum settings.
 
-**Important:** The session state, quantum, and beat time used for committing the buffer
-must be the same as those used for rendering the audio locally. Always capture the
-session state and calculate beat positions before rendering, then use those same values
-when committing the buffer.
+A buffer from a different Link session cannot be aligned to the current session. Received
+buffers may also have a different sample rate or size from the receiver's audio engine,
+so the receiving application must adapt them to its own playback process.
 
-### Receiving Audio
+## Test Plan
 
-To subscribe and receive audio from a specific channel, create a `LinkAudioSource` with a
-channel ID and a callback. The channels Id is obtained from channel discovery. The callback
-is invoked on a Link-managed thread whenever new audio buffers arrive from the corresponding
-sink.
+These tests cover user interactions expected to work consistently across Link-enabled
+apps on all platforms. Verify the applicable cases before releasing your app.
 
-Use `info.beginBeats()` and `info.endBeats()` to map the remote beat time to your local
-Link session state, accounting for differences in quantum and timeline offsets. These
-methods return `std::nullopt` if the buffer originates from a different Link session.
-Note that incoming buffers don't match the receivers audio engine block size and sample rate
-as those properties are dependant on the senders properties and network requirements.
+### Tempo Changes
+
+#### TEMPO-1: Tempo changes should be transmitted between connected apps.
+
+- Open LinkHut, start playback and enable Link.
+- Open App and enable Link.
+- Before starting playback, change tempo in App &rarr; LinkHut clicks should speed up or slow down to match the tempo specified in the App.
+- Start playback in the App &rarr; App and LinkHut should be in sync.
+- Change tempo in App and in LinkHut &rarr; App and LinkHut should remain in sync.
+
+#### TEMPO-2: Opening an app with Link enabled should not change the tempo of an existing Link session.
+
+- Open App and enable Link.
+- Set App tempo to 100bpm.
+- Terminate App.
+- Open LinkHut, start playback and enable Link.
+- Set LinkHut tempo to 130bpm.
+- Open App and enable Link &rarr; App and LinkHut should be connected and both show a tempo of 130bpm.
+
+#### TEMPO-3: When connected, loading a new document should not change the Link session tempo.
+
+- Open LinkHut, start playback and enable Link.
+- Set LinkHut tempo to 130bpm.
+- Open App and enable Link &rarr; LinkHut’s tempo should not change.
+- Load new Song/Set/Session in the App with a tempo other than 130bpm &rarr; App and LinkHut tempo should both be 130bpm.
+
+#### TEMPO-4: Tempo range handling.
+
+- Open LinkHut, start playback and enable Link.
+- Open App, start playback and enable Link.
+- Change tempo in LinkHut to 20bpm &rarr; App and LinkHut should stay in sync.
+- Change Tempo in LinkHut to 999bpm &rarr; App and LinkHut should stay in sync.
+- If App does not support the full range of tempos supported by Link, it should stay in sync by switching to a multiple of the Link session tempo.
+
+#### TEMPO-5: Enabling Link does not change app's tempo if there is no Link session to join.
+- Open App, start playback.
+- Change App tempo to something other than the default.
+- Enable Link &rarr; App's tempo should not change.
+- Change App tempo to a new value (not the default).
+- Disable Link &rarr; App's tempo should not change.
+
+### Beat Time
+
+These cases verify the continuity of beat time across Link operations.
+
+#### BEATTIME-1: Enabling Link does not change app's beat time if there is no Link session to join.
+- Open App, start playback.
+- Enable Link &rarr; No beat time jump or audible discontinuity should occur.
+- Disable Link &rarr; No beat time jump or audible discontinuity should occur.
+
+#### BEATTIME-2: App's beat time does not change if another participant joins its session.
+- Open App, enable Link and start playback.
+- Open LinkHut and enable Link &rarr; No beat time jump or audible discontinuity should occur in the App.
+
+**Note**: When joining an existing Link session, an app should adjust to the existing session's tempo and phase, which will usually result in a beat time jump.
+Apps that are already in a session should never have any kind of beat time or audio discontinuity when a new participant joins the session.
+
+### Start Stop States
+
+#### STARTSTOPSTATE-1: Listening to start/stop commands from other peers.
+- Open App, enable Link and Start Stop Sync.
+- Open LinkHut, enable Link and Start Stop Sync and start playback &rarr; App should start playback according to its quantization.
+- Stop playback in LinkHut &rarr; App should stop playback.
+
+#### STARTSTOPSTATE-2: Sending start/stop commands to other peers.
+- Open LinkHut, enable Link and Start Stop Sync and start playback.
+- Open App, enable Link and Start Stop Sync &rarr; App should not be playing while LinkHut continues playing.
+- Start playback in App &rarr; App should start playback according to its quantization.
+- Stop playback in App &rarr; App and LinkHut should stop playback.
+- Start playback in App &rarr; App and LinkHut should start playback according to their quantizations.
+
+### Arrangement Sync
+
+These cases apply to apps that support Arrangement Sync.
+
+#### ARRANGEMENT-1: Arrangement-synced peers share their position and launch time.
+
+- Open LinkHut and App, enable Link and Arrangement Sync in both, and set both quantums to the same value. Leave both stopped.
+- Start playback in LinkHut &rarr; both should begin at the same quantized launch time and
+  show the same arrangement beat as playback advances.
+- Stop playback in App &rarr; both should stop.
+- Start playback in App &rarr; both should again begin at the same quantized launch time
+  and continue from the same arrangement beat.
+
+#### ARRANGEMENT-2: A position jump is shared immediately without restarting playback.
+
+- Open LinkHut and App, enable Link and Arrangement Sync in both, set both quantums to the same value and start playback.
+- After playback has advanced several bars, initiate a beat time jump in LinkHut &rarr; both peers should jump to beat 0 immediately, without waiting for the next boundary or restarting transport.
+- If App supports seeking, jump to another arrangement beat in App &rarr; LinkHut should follow immediately while both continue playing.
+
+### Audio Engine
+
+These cases verify the correct implementation of latency compensation within an app's audio engine.
+
+#### AUDIOENGINE-1: Correct alignment of app audio with shared session
+
+- Use an audio interface to route the audio outputs of App and LinkHut to a recording software.
+- Open LinkHut, enable Link and start playback.
+- Open App and enable Link.
+- Start audio playback (preferably a short, click-like sample) with notes on the same beats as LinkHut.
+- Record both outputs in an audio recording software.
+- Validate whether onset of the sample aligns with the pulse generated by LinkHut (tolerance: less than 3 ms).
+
+#### AUDIOENGINE-2: Correct alignment when latency is updated
+
+- Route the audio outputs of App and LinkHut to recording software, as in AUDIOENGINE-1.
+- Open LinkHut, enable Link and start playback.
+- Open App, enable Link, and start playback of a short, click-like sample on the same beats as LinkHut.
+- While both are playing, change App's audio output latency. For example, switch between audio interfaces, change the audio buffer size if the app supports it, or add a plugin that introduces latency.
+  On iOS, switch from the device speaker to headphones or an external audio interface.
+- Record both outputs after the latency change.
+- Validate that the sample onset still aligns with the LinkHut pulse (tolerance: less than 3 ms).
+
+For iOS implementation guidance, see [Host Time](/linkkit/#host-time).
+
+### iOS-Specific Background Behavior Tests
+
+The following tests apply to iOS apps using LinkKit. These cases test the correct implementation of the [app life cycle guidelines](/linkkit/#app-life-cycle).
+
+#### BACKGROUND-1: Link remains active when going to the background while playing audio.
+
+- Open LinkHut, start playback and enable Link.
+- Open App and enable Link.
+- Start playback in App and put it in the background.
+- Open LinkHut, navigate to the Link settings &rarr; there should be 1 connected app.
+
+#### BACKGROUND-2: Link is deactivated when going to the background and audio will not be played while in background.
+
+- Open LinkHut, start playback and enable Link.
+- Open App, start playback and enable Link.
+- Stop playback in App and put it in the background.
+- Open LinkHut, navigate to the Link settings &rarr; there should be 0 connected apps.
+- Bring App to the foreground again &rarr; there should be a notification “1 Link” and the Link settings should reflect this.
+- Disable and enable Link in App &rarr; there should be a notification “1 Link” and the Link settings should reflect this.
+
+**Note:** This is the expected behavior even if the App's background audio mode is enabled.
+Whenever the App goes to the background and it's known that the App will not be playing audio or processing MIDI while in the background (not receiving MIDI, not connected to IAA or Audiobus), Link should be deactivated.
+
+#### BACKGROUND-3: Link remains active when going to background while Start Stop Sync is enabled (if supported).
+
+- Open LinkHut and enable Link and Start/Stop Sync.
+- Switch to the App and enable Link and Start/Stop Sync &rarr; there should be a notification "1 Link" and the Link settings should reflect this.
+- Make sure the App is not playing and switch to LinkHut &rarr; No notification is presented. The Link settings should still indicate 1 connected App.
+- Start and stop playback in LinkHut &rarr; App should start and stop playback accordingly.
+
+**Note**: While Start Stop Sync is enabled Link must remain active even while not playing in the background because the App must be prepared to start playback at any time.
+
+#### BACKGROUND-4: Link remains active when going to background while part of an IAA or Audiobus session (if supported).
+
+- Open LinkHut, start playback and enable Link.
+- Open Audiobus and add the App as *Input*.
+- Switch to the App and enable Link &rarr; there should be a notification "1 Link" and the Link settings should reflect this.
+- Make sure the App is not playing and switch to LinkHut &rarr; No notification is presented. The Link settings should still indicate 1 connected App.
+
+**Note**: While connected to Audiobus/IAA Link must remain active even while not playing in the background because the App must be prepared to start playback at any time.
+
+#### BACKGROUND-5: Link is activated when App added to an Audiobus or IAA session while not playing in the background (if supported).
+
+- Open LinkHut, start playback and enable Link.
+- Open App and enable Link &rarr; The Link settings should indicate 1 connected App.
+- Make sure the app is not playing and switch to Audiobus.
+- Add the App as *Input* in Audiobus. Do this without tapping to wake it up. If the App is sleeping, switch back to it and then back to Audiobus and try again.
+- Switch back to LinkHut &rarr; The Link settings should indicate 1 connected App.
+- Switch back to Audiobus and eject the App from the Audiobus session.
+- Switch back to LinkHut &rarr; The Link settings should indicate 0 connected Apps.
+
+**Note**: When an App in the background has deactivated Link, it must re-activate it if
+it becomes part of an Audiobus or IAA session, even if does not come to the foreground.
+Conversely, an App that is part of an Audiobus or IAA session and is then disconnected from the session while in the background and not playing should deactivate Link.
 
 ## Resources
 
